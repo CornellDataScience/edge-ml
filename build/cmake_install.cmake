@@ -1,4 +1,4 @@
-# Install script for directory: /Users/chris/Documents/CDS/edge-ml
+# Install script for directory: /Users/chris/Documents/CDS/edge-ml/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

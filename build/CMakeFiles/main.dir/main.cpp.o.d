@@ -1,5 +1,5 @@
 CMakeFiles/main.dir/main.cpp.o: \
-  /Users/chris/Documents/CDS/edge-ml/main.cpp \
+  /Users/chris/Documents/CDS/edge-ml/src/main.cpp \
   /opt/homebrew/Cellar/opencv/4.8.1/include/opencv4/opencv2/opencv.hpp \
   /opt/homebrew/Cellar/opencv/4.8.1/include/opencv4/opencv2/opencv_modules.hpp \
   /opt/homebrew/Cellar/opencv/4.8.1/include/opencv4/opencv2/core.hpp \

@@ -220,7 +220,7 @@ OpenCVExample_BINARY_DIR:STATIC=/Users/chris/Documents/CDS/edge-ml/build
 OpenCVExample_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
-OpenCVExample_SOURCE_DIR:STATIC=/Users/chris/Documents/CDS/edge-ml
+OpenCVExample_SOURCE_DIR:STATIC=/Users/chris/Documents/CDS/edge-ml/src
 
 //The directory containing a CMake configuration file for OpenCV.
 OpenCV_DIR:PATH=/opt/homebrew/lib/cmake/opencv4
@@ -304,7 +304,7 @@ CMAKE_GENERATOR_PLATFORM:INTERNAL=
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
 //Source directory with the top level CMakeLists.txt file for this
 // project
-CMAKE_HOME_DIRECTORY:INTERNAL=/Users/chris/Documents/CDS/edge-ml
+CMAKE_HOME_DIRECTORY:INTERNAL=/Users/chris/Documents/CDS/edge-ml/src
 //ADVANCED property for variable: CMAKE_INSTALL_NAME_TOOL
 CMAKE_INSTALL_NAME_TOOL-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_LINKER
