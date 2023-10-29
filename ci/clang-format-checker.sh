@@ -16,5 +16,3 @@ for f in modified_files:
   result = subprocess.run(["clang-format", "--dry-run", "--Werror", f])
   if result.returncode:
     exit(1)
-
-exit(0)

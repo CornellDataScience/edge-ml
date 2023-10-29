@@ -4,8 +4,13 @@
 import subprocess
 
 # Get the list of modified files. from git
+#modified_files = subprocess.check_output(
+#    "{ git diff --name-only ; git diff --name-only --staged ; } | sort | uniq",
+#    shell=True,
+#).splitlines()
+
 modified_files = subprocess.check_output(
-    "{ git diff --name-only ; git diff --name-only --staged ; } | sort | uniq",
+    "find src/ -iname *.h -o -iname *.cpp",
     shell=True,
 ).splitlines()
 
