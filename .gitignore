@@ -1,2 +1,4 @@
 # ignore everything in faces directory:
 src/model/faces/**
+src/model/david/**
+venv/**
