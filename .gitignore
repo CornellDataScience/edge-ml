@@ -3,5 +3,4 @@ src/model/faces/**
 src/model/train/**
 src/model/test/**
 venv/**
-
-
+utils/cropped
