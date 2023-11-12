@@ -1,0 +1,3 @@
+/Users/chris/Documents/CDS/edge-ml/build/CMakeFiles/motion_detection.dir
+/Users/chris/Documents/CDS/edge-ml/build/CMakeFiles/edit_cache.dir
+/Users/chris/Documents/CDS/edge-ml/build/CMakeFiles/rebuild_cache.dir

@@ -1,1 +1,3 @@
 utils/cropped
+*.DS_Store
+.vscode/
