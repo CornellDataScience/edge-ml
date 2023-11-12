@@ -44,7 +44,7 @@ def get_embedding(model, face_pixels):
 
 
 # Load and preprocess images
-image1 = preprocess_image('train/david_1.jpg')
+image1 = preprocess_image('train/will-smith_1.jpg')
 image2 = preprocess_image('test/test_david10.jpg')
 
 # Get embeddings

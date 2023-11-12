@@ -4,3 +4,4 @@ src/model/train/**
 src/model/test/**
 src/model/david/**
 venv/**
+utils/cropped
