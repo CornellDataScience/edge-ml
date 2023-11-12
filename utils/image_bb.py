@@ -17,9 +17,10 @@ for filename in os.listdir(img_folder):
 
         faces_rect = haar_cascade.detectMultiScale(g_img, scaleFactor=1.1, minNeighbors=6) 
 
-        time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+        # time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
 
-        output_dir = 'cropped/{}'.format(time) # write bounding boxes to here
+        # output_dir = 'cropped/{}'.format(time) # write bounding boxes to here
+        output_dir = 'cropped/{}'.format(filename[:filename.index(".")])
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
