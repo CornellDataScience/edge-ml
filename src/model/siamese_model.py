@@ -6,6 +6,11 @@ from tensorflow.keras.layers import Dropout
 from tensorflow.keras.layers import GlobalAveragePooling2D
 from tensorflow.keras.layers import MaxPooling2D
 
+from tensorflow.keras.layers import Lambda
+from tensorflow.keras import backend as K
+
+import numpy as np
+
 img_rows, img_cols = 224, 224
 print(img_rows, img_cols)
 
@@ -32,9 +37,6 @@ def create_model():
     return model
 
 
-from tensorflow.keras.layers import Lambda
-from tensorflow.keras import backend as K
-
 feature_extractor = create_model()
 imgA = Input(shape=(img_rows, img_cols, 3))
 imgB = Input(shape=(img_rows, img_cols, 3))
@@ -42,7 +44,6 @@ featA = feature_extractor(imgA)
 featB = feature_extractor(imgB)
 
 print("checkpoint 1")
-
 
 def euclidean_distance(vectors):
     (featA, featB) = vectors
@@ -55,8 +56,6 @@ outputs = Dense(1, activation="sigmoid")(distance)
 model = Model(inputs=[imgA, imgB], outputs=outputs)
 
 model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
-
-import numpy as np
 
 print("checkpoint 2")
 
@@ -99,7 +98,7 @@ labels_dataset = []
 images_test_dataset = []
 labels_test_dataset = []
 
-for image_path in glob.glob("david/david*.jpg"):
+for image_path in glob.glob("train/*.jpg"):
     image = cv2.imread(image_path)
     # print(image.shape)
     # need to bounding box here
@@ -109,7 +108,7 @@ for image_path in glob.glob("david/david*.jpg"):
     label = "david"
     labels_dataset.append(label)
 
-for image_path in glob.glob("david/test*.jpg"):
+for image_path in glob.glob("test/*.jpg"):
     image = cv2.imread(image_path)
     print(image.shape, image_path)
     # need to bounding box here
