@@ -1,3 +1,8 @@
-/home/cds-nano-3/edge-ml/build/CMakeFiles/rebuild_cache.dir
-/home/cds-nano-3/edge-ml/build/CMakeFiles/simple_camera.dir
-/home/cds-nano-3/edge-ml/build/CMakeFiles/edit_cache.dir
+/Users/chris/Documents/CDS/edge-ml/build/CMakeFiles/camera.dir
+/Users/chris/Documents/CDS/edge-ml/build/CMakeFiles/edit_cache.dir
+/Users/chris/Documents/CDS/edge-ml/build/CMakeFiles/rebuild_cache.dir
+/Users/chris/Documents/CDS/edge-ml/build/src/CMakeFiles/edit_cache.dir
+/Users/chris/Documents/CDS/edge-ml/build/src/CMakeFiles/rebuild_cache.dir
+/Users/chris/Documents/CDS/edge-ml/build/utils/CMakeFiles/UtilityLib.dir
+/Users/chris/Documents/CDS/edge-ml/build/utils/CMakeFiles/edit_cache.dir
+/Users/chris/Documents/CDS/edge-ml/build/utils/CMakeFiles/rebuild_cache.dir
