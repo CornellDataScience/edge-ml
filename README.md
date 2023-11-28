@@ -3,6 +3,9 @@
 To run: 
 
 `cd build` 
+
 `cmake ..`
+
 `make`
+
 `./camera`
