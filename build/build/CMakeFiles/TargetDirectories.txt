@@ -1,3 +1,0 @@
-/home/cds-nano-3/EdgeML/build/CMakeFiles/rebuild_cache.dir
-/home/cds-nano-3/EdgeML/build/CMakeFiles/simple_camera.dir
-/home/cds-nano-3/EdgeML/build/CMakeFiles/edit_cache.dir
