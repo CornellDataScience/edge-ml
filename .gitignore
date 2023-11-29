@@ -1,1 +1,7 @@
 utils/cropped
+# ignore everything in faces directory:
+src/model/faces/**
+src/model/train/**
+src/model/test/**
+src/model/david/**
+venv/**
