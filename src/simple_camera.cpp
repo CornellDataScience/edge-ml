@@ -8,6 +8,7 @@
 
 #include <opencv2/opencv.hpp>
 #include "../utils/motion_detection.cpp"
+#include <fstream>
 
 std::string gstreamer_pipeline(int capture_width, int capture_height, int display_width, int display_height, int framerate, int flip_method)
 {
@@ -23,8 +24,8 @@ int main()
     int capture_height = 720;
     int display_width = 1280;
     int display_height = 720;
-    int default_framerate = 4;
-    int motion_framerate = 2;
+    int default_framerate = 5;
+    int motion_framerate = 5;
     int flip_method = 0;
 
     std::string pipeline = gstreamer_pipeline(capture_width,
@@ -34,22 +35,19 @@ int main()
                                               default_framerate,
                                               flip_method);
     std::cout << "Using pipeline: \n\t" << pipeline << "\n";
-
+   
     cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER); // nano
     // cv::VideoCapture cap(0); // macbook
-
     if (!cap.isOpened())
     {
         std::cout << "Failed to open camera." << std::endl;
         return (-1);
     }
-
     cv::namedWindow("CSI Camera", cv::WINDOW_AUTOSIZE);
     cv::Mat img;
 
     std::cout << "Hit ESC to exit"
               << "\n";
-
     int i = 0;
     while (true)
     {
@@ -72,6 +70,7 @@ int main()
         if ((i > 0) && (detect_motion(prevImPath, currImPath))) // if prev img and motion detected
         {
             cap.set(cv::CAP_PROP_FPS, motion_framerate);
+	    std::cout << "MOTION DETECTED" << std::endl;;
         }
         else
         {
