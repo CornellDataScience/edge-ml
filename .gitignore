@@ -6,3 +6,4 @@ src/model/david/**
 venv/**
 utils/cropped
 src/model/keras/**
+src/model/*.h5
