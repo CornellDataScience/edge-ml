@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 ## Open all modified files in the current branch and run clang-format on them.
 import subprocess
@@ -10,7 +10,7 @@ import subprocess
 #).splitlines()
 
 modified_files = subprocess.check_output(
-    "find src/ -iname *.h -o -iname *.cpp",
+    "find ../src/ -iname *.h -o -iname *.cpp",
     shell=True,
 ).splitlines()
 
