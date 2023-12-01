@@ -7,3 +7,8 @@ src/model/david/**
 venv/**
 src/model/keras/**
 src/model/*.h5
+build/**
+Images/**
+
+*.DS_Store
+.vscode/
