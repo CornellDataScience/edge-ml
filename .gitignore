@@ -11,3 +11,4 @@ build/**
 Images/**
 *.DS_Store
 .vscode/
+CMakeFiles/**
