@@ -1,10 +1,10 @@
-// // simple_camera.cpp
-// // MIT License
-// // Copyright (c) 2019-2022 JetsonHacks
-// // See LICENSE for OpenCV license and additional information
-// // Using a CSI camera (such as the Raspberry Pi Version 2) connected to a
-// // NVIDIA Jetson Nano Developer Kit using OpenCV
-// // Drivers for the camera and OpenCV are included in the base image
+// simple_camera.cpp
+// MIT License
+// Copyright (c) 2019-2022 JetsonHacks
+// See LICENSE for OpenCV license and additional information
+// Using a CSI camera (such as the Raspberry Pi Version 2) connected to a
+// NVIDIA Jetson Nano Developer Kit using OpenCV
+// Drivers for the camera and OpenCV are included in the base image
 
 // #include <opencv2/opencv.hpp>
 
@@ -77,102 +77,92 @@
 #include <chrono>
 #include <iomanip>
 #include <opencv2/opencv.hpp>
-#include <sstream>
+#include "../utils/motion_detection.cpp"
+#include <fstream>
 
-int WAIT_TIME = 5.0; // seconds
-
-// function to get the current time formatted
-std::string current_time_formatted() {
-  auto now = std::chrono::system_clock::now();
-  auto in_time_t = std::chrono::system_clock::to_time_t(now);
-
-  std::stringstream ss;
-  ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M-%S");
-  return ss.str();
+std::string gstreamer_pipeline(int capture_width, int capture_height, int display_width, int display_height, int framerate, int flip_method)
+{
+  return "nvarguscamerasrc ! video/x-raw(memory:NVMM), width=(int)" + std::to_string(capture_width) + ", height=(int)" +
+         std::to_string(capture_height) + ", framerate=(fraction)" + std::to_string(framerate) +
+         "/1 ! nvvidconv flip-method=" + std::to_string(flip_method) + " ! video/x-raw, width=(int)" + std::to_string(display_width) + ", height=(int)" +
+         std::to_string(display_height) + ", format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink";
 }
 
-int main() {
-  // defualt webcam caputre - change for jetson
-  int webcam_index = 0;
+int main()
+{
+  int capture_width = 1280;
+  int capture_height = 720;
+  int display_width = 1280;
+  int display_height = 720;
+  int default_framerate = 5;
+  int motion_framerate = 5;
+  int flip_method = 0;
 
-  // open the default camera
-  cv::VideoCapture cap(webcam_index);
-  // error handling
-  if (!cap.isOpened()) {
-    std::cout << "Failed to open camera." << std::endl;
-    return -1;
-  }
+  std::string pipeline = gstreamer_pipeline(capture_width,
+                                            capture_height,
+                                            display_width,
+                                            display_height,
+                                            default_framerate,
+                                            flip_method);
+  std::cout << "Using pipeline: \n\t" << pipeline << "\n";
 
-  // load the face cascade
-  cv::CascadeClassifier face_cascade;
-  if (!face_cascade.load(
-          "./haarcascade_frontalface_default.xml")) // Update with correct path
+  cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER); // nano
+  // cv::VideoCapture cap(0); // macbook
+  if (!cap.isOpened())
   {
-    // error handling
-    std::cout << "Error loading face cascade\n";
-    return -1;
+    std::cout << "Failed to open camera." << std::endl;
+    return (-1);
   }
+  cv::namedWindow("CSI Camera", cv::WINDOW_AUTOSIZE);
+  cv::Mat img;
 
-  // create a window
-  cv::namedWindow("Webcam", cv::WINDOW_AUTOSIZE);
-  cv::Mat img;                      // create a matrix to hold the image
-  std::cout << "Hit ESC to exit\n"; // print to console
-  auto start = std::chrono::steady_clock::now(); // start the timer
-  int i = 0;                                     // image counter
-
-  // main loops
-  while (true) {
-    // read the image
-    if (!cap.read(img)) {
+  std::cout << "Hit ESC to exit"
+            << "\n";
+  int i = 0;
+  while (true)
+  {
+    if (!cap.read(img))
+    {
       std::cout << "Capture read error" << std::endl;
       break;
     }
+    std::cout << "Capture win" << std::endl;
 
-    // detect faces
-    std::vector<cv::Rect> faces;
-    cv::Mat gray; // create a matrix to hold the gray image
-    cvtColor(img, gray, cv::COLOR_BGR2GRAY);    // convert to gray
-    face_cascade.detectMultiScale(gray, faces); // detect faces
+    std::string prevImPath = "/home/cds-nano-3/edge-ml/Images/image" + std::to_string(i - 1) + ".jpg";
+    std::string currImPath = "/home/cds-nano-3/edge-ml/Images/image" + std::to_string(i) + ".jpg";
+    cv::imshow("CSI Camera", img);
 
-    // draw the faces
-    for (const auto &face : faces) {
-      // draw a rectangle around the face
-      cv::rectangle(img, face, cv::Scalar(255, 0, 0), 2);
-    }
+    cv::imwrite(currImPath, img);
 
-    // display realtime webcam feed
-    cv::imshow("Webcam", img);
-
-    // save the image every 5 seconds
-    auto end = std::chrono::steady_clock::now();
-    // calculate the elapsed time
-    std::chrono::duration<double> elapsed = end - start;
-
-    // save the image under time condition
-    if (elapsed.count() >= WAIT_TIME) // 5 seconds
-    {
-      // save the image
-      for (const auto &face : faces) {
-        // crop the face
-        cv::Mat face_img = img(face);
-        // save the image
-        std::string filename = "../Images/image_" + std::to_string(i) + "_" +
-                               current_time_formatted() + ".jpg";
-        cv::imwrite(filename, face_img);
-        i++;
-      }
-      start = std::chrono::steady_clock::now(); // reset the timer
-    }
-
-    // exit on ESC
-    int keycode = cv::waitKey(1) & 0xff;
-    if (keycode == 27) // ESC key
+    int keycode = cv::waitKey(10) & 0xff;
+    if (keycode == 27) // esc
       break;
+
+    if ((i > 0) && (detect_motion(prevImPath, currImPath))) // if prev img and motion detected
+    {
+      cap.set(cv::CAP_PROP_FPS, motion_framerate);
+      std::cout << "MOTION DETECTED" << std::endl;
+    }
+    else
+    {
+      cap.set(cv::CAP_PROP_FPS, default_framerate);
+    }
+
+    double frameRate = cap.get(cv::CAP_PROP_FPS);
+    std::cout << "Current Frame Rate: " << frameRate << std::endl;
+
+    i++;
   }
 
-  // release the camera
+  // exit on ESC
+  int keycode = cv::waitKey(1) & 0xff;
+  if (keycode == 27) // ESC key
+    break;
+}
 
-  cap.release();
-  cv::destroyAllWindows();
-  return EXIT_SUCCESS;
+// release the camera
+
+cap.release();
+cv::destroyAllWindows();
+return EXIT_SUCCESS;
 }
