@@ -7,10 +7,16 @@
 #IncludeRegexTransform: 
 
 /home/cds-nano-3/edge-ml/src/simple_camera.cpp
-opencv2/opencv.hpp
--
 ../utils/motion_detection.cpp
 /home/cds-nano-3/edge-ml/utils/motion_detection.cpp
+chrono
+-
+iomanip
+-
+opencv2/opencv.hpp
+-
+sstream
+-
 fstream
 -
 

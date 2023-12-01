@@ -55,7 +55,7 @@ int main() {
   // load the face cascade
   cv::CascadeClassifier face_cascade;
   if (!face_cascade.load(
-          "../utils/haarcascade_frontalface_default.xml")) // Update with
+          "/home/cds-nano-3/edge-ml/utils/haarcascade_frontalface_default.xml")) // Update with
                                                            // correct path
   {
     // error handling
@@ -81,10 +81,10 @@ int main() {
 
     // fix paths when using jetson
     std::string prevImPath =
-        "../Images/image" + std::to_string(img_count - 1) + ".jpg";
+        "/home/cds-nano-3/edge-ml/Images/image" + std::to_string(img_count - 1) + ".jpg";
     std::string currImPath =
-        "../Images/image" + std::to_string(img_count) + ".jpg";
-
+        "/home/cds-nano-3/edge-ml/Images/image" + std::to_string(img_count) + ".jpg";
+    
     // display realtime webcam feed
     cv::imshow("CSI Camera", img);
 
@@ -107,15 +107,17 @@ int main() {
 
         // draw the faces
         for (const auto &face : faces) {
-          // draw a rectangle around the face
+          std::cout << "drawing faces" << std::endl;
+	  // draw a rectangle around the face
           cv::rectangle(img, face, cv::Scalar(255, 0, 0), 2);
         }
         // save the image
         for (const auto &face : faces) {
-          // crop the face
+          std::cout << "saving faces" << std::endl;
+	  // crop the face
           cv::Mat face_img = img(face);
           // save the image
-          std::string filename = "../Images/bounding_boxes/image" +
+          std::string filename = "/home/cds-nano-3/edge-ml/Images/bounding_boxes/image" +
                                  std::to_string(bb_count) + ".jpg";
           cv::imwrite(filename, face_img);
           bb_count++;
