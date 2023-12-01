@@ -5,13 +5,9 @@ src/model/train/**
 src/model/test/**
 src/model/david/**
 venv/**
-<<<<<<< HEAD
 src/model/keras/**
 src/model/*.h5
-=======
 build/**
 Images/**
-
 *.DS_Store
 .vscode/
->>>>>>> origin/fixed-cpp-final

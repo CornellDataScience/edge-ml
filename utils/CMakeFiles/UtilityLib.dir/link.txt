@@ -1,0 +1,2 @@
+/usr/bin/ar qc libUtilityLib.a  CMakeFiles/UtilityLib.dir/motion_detection.cpp.o
+/usr/bin/ranlib libUtilityLib.a
