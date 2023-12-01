@@ -22,7 +22,7 @@ def preprocess_image(filename):
 # Initialize parser
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "filename", type=str, help="Path to the input image file (e.g., img.jpg)"
+    "--filename", type=str, help="Path to the input image file (e.g., img.jpg)"
 )
 
 args = parser.parse_args()
