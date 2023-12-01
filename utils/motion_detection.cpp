@@ -5,12 +5,14 @@ const double MIN_CONTOUR_SIZE = 3000; // Adjust this threshold as needed
 
 bool detect_motion(std::string im_path1, std::string im_path2)
 {
+    
     // load images
     cv::Mat image1 = cv::imread(im_path1);
     cv::Mat image2 = cv::imread(im_path2);
 
     // preprocess
     cv::Mat gray1, gray2;
+    
     cv::cvtColor(image1, gray1, cv::COLOR_BGR2GRAY);
     cv::cvtColor(image2, gray2, cv::COLOR_BGR2GRAY);
     cv::GaussianBlur(gray1, gray1, cv::Size(21, 21), 0);

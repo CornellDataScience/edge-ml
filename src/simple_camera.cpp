@@ -51,26 +51,27 @@ int main()
     int i = 0;
     while (true)
     {
-        if (!cap.read(img))
+	if (!cap.read(img))
         {
             std::cout << "Capture read error" << std::endl;
-            break;
+	    break;
         }
+	std::cout << "Capture win" << std::endl;
 
-        std::string prevImPath = "../Images/image" + std::to_string(i - 1) + ".jpg";
-        std::string currImPath = "../Images/image" + std::to_string(i) + ".jpg";
-
+        std::string prevImPath = "/home/cds-nano-3/edge-ml/Images/image" + std::to_string(i - 1) + ".jpg";
+	std::string currImPath = "/home/cds-nano-3/edge-ml/Images/image" + std::to_string(i) + ".jpg";
         cv::imshow("CSI Camera", img);
+
         cv::imwrite(currImPath, img);
 
-        int keycode = cv::waitKey(10) & 0xff;
+	int keycode = cv::waitKey(10) & 0xff;
         if (keycode == 27) // esc
             break;
 
-        if ((i > 0) && (detect_motion(prevImPath, currImPath))) // if prev img and motion detected
+	if ((i > 0) && (detect_motion(prevImPath, currImPath))) // if prev img and motion detected
         {
             cap.set(cv::CAP_PROP_FPS, motion_framerate);
-	    std::cout << "MOTION DETECTED" << std::endl;;
+	    std::cout << "MOTION DETECTED" << std::endl;
         }
         else
         {
