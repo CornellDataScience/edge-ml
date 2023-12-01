@@ -5,3 +5,8 @@ src/model/train/**
 src/model/test/**
 src/model/david/**
 venv/**
+build/**
+Images/**
+
+*.DS_Store
+.vscode/

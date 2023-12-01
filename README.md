@@ -6,3 +6,12 @@
 Make sure git-clang-format is installed with `npm install -g clang-format`
 1. Call `clang-format.sh` under ci/
 2. `git add` and `git commit`!
+To run: 
+
+`cd build` 
+
+`cmake ..`
+
+`make`
+
+`./camera`
