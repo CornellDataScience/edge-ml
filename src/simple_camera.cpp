@@ -111,4 +111,4 @@ int main() {
   cap.release();
   cv::destroyAllWindows();
   return EXIT_SUCCESS;
-}%
+}
