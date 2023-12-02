@@ -15,3 +15,4 @@ Images/**
 **/cmake_install.cmake
 **/CMakeCache.txt
 camera
+src/lfwa/**
