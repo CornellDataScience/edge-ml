@@ -4,6 +4,9 @@ import os
 import random
 import tensorflow as tf
 from pathlib import Path
+
+from utils import preprocess_image, preprocess_triplets
+
 from tensorflow.keras import layers
 from tensorflow.keras import optimizers
 from tensorflow.keras import metrics
@@ -15,32 +18,6 @@ target_shape = (200, 200)
 cache_dir = Path().resolve() / "keras"
 anchor_images_path = cache_dir / "left"
 positive_images_path = cache_dir / "right"
-
-def preprocess_image(filename):
-    """
-    Load the specified file as a JPEG image, preprocess it and
-    resize it to the target shape.
-    """
-
-    image_string = tf.io.read_file(filename)
-    image = tf.image.decode_jpeg(image_string, channels=3)
-    image = tf.image.convert_image_dtype(image, tf.float32)
-    image = tf.image.resize(image, target_shape)
-    return image
-
-
-def preprocess_triplets(anchor, positive, negative):
-    """
-    Given the filenames corresponding to the three images, load and
-    preprocess them.
-    """
-
-    return (
-        preprocess_image(anchor),
-        preprocess_image(positive),
-        preprocess_image(negative),
-    )
-
 
 class DistanceLayer(layers.Layer):
     """
@@ -190,4 +167,5 @@ siamese_network = Model(
 siamese_model = SiameseModel(siamese_network)
 siamese_model.compile(optimizer=optimizers.Adam(0.0001))  # 0..0001
 siamese_model.fit(train_dataset, epochs=7, validation_data=val_dataset)
-embedding.save("siamese_feature.h5")
+embedding.save_weights("weights/embedding_weights.h5")
+siamese_model.save_weights("weights/siamese_weights.h5")

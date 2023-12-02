@@ -1,28 +1,17 @@
-# from Siamese_Network import preprocess_image
+import threading
 import tensorflow as tf
-from tensorflow.keras.applications import resnet
-import argparse
-from tensorflow.keras import metrics
 import time
+
+from utils import preprocess_image
+
+from tensorflow.keras.applications import resnet
+from tensorflow.keras import metrics
+
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
-import threading
-
-def preprocess_image(filename):
-    """
-    Load the specified file as a JPEG image, preprocess it and
-    resize it to the target shape.
-    """
-    target_shape = (200, 200)
-
-    image_string = tf.io.read_file(filename)
-    image = tf.image.decode_jpeg(image_string, channels=3)
-    image = tf.image.convert_image_dtype(image, tf.float32)
-    image = tf.image.resize(image, target_shape)
-    return image
 
 # load the model
-embedding = tf.keras.models.load_model("siamese_feature.h5", compile=False)
+embedding = tf.keras.models.load_model("siamese_weights.h5", compile=False)
 print("Model is done loading")
 
 # load david base
