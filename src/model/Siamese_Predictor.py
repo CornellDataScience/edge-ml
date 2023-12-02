@@ -6,6 +6,7 @@ from tensorflow.keras import metrics
 import time
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
+import threading
 
 def preprocess_image(filename):
     """
@@ -22,32 +23,36 @@ def preprocess_image(filename):
 
 # load the model
 embedding = tf.keras.models.load_model("siamese_feature.h5", compile=False)
+print("Model is done loading")
+
+# load david base
+david_2 = preprocess_image("david_base.jpg")
+david_2 = tf.expand_dims(david_2, axis=0)
 
 def get_similarity_score(img_path):
-    print("Wait a bit for image to write?")
-    time.sleep(5);
-    # TODO: lol, fix this
-    print("After 5 seconds")
+    time.sleep(0.5);
     david_1 = preprocess_image(img_path)
-    david_2 = preprocess_image("david_base.jpg")
+    
     # add a dimension to the tensor
     david_1 = tf.expand_dims(david_1, axis=0)
-    david_2 = tf.expand_dims(david_2, axis=0)
-
+    
+    # get embeddings
     anchor_embedding, positive_embedding = (
         embedding(resnet.preprocess_input(david_1)),
         embedding(resnet.preprocess_input(david_2)),
     )
-
+    
+    # get similarity score
     cosine_similarity = metrics.CosineSimilarity()
 
     positive_similarity = cosine_similarity(anchor_embedding, positive_embedding)
-    print("Similarity score: ", positive_similarity.numpy())
+    print(f"Similarity score for {img_path}: ", positive_similarity.numpy())
 
 # set up on created
 def on_created(event):
     print(f"hey, {event.src_path} has been created!")
-    get_similarity_score(event.src_path)
+    model_thread = threading.Thread(target=lambda: get_similarity_score(event.src_path))
+    model_thread.start()
 
 # set up watchdog
 patterns = ["*"]
@@ -58,7 +63,7 @@ my_event_handler = PatternMatchingEventHandler(patterns, ignore_patterns, ignore
 my_event_handler.on_created = on_created
 
 # create observer
-path = "../../Images"
+path = "../../Images/bounding_boxes"
 go_recursively = True
 my_observer = Observer()
 my_observer.schedule(my_event_handler, path, recursive=go_recursively)
