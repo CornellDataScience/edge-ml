@@ -1,12 +1,18 @@
-# from Siamese_Network import preprocess_image
+import threading
 import tensorflow as tf
 from tensorflow.keras.optimizers import Adam
 import numpy as np
 import time
+
+from utils import preprocess_image
+
+from tensorflow.keras.applications import resnet
+from tensorflow.keras import metrics
+
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 import threading
-from siamese_network import SiameseNetwork
+from Siamese_Network import SiameseNetwork
 from PIL import Image
 
 
