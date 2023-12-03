@@ -15,3 +15,15 @@ To run:
 `make`
 
 `./camera`
+
+Setting up Twilio: 
+
+- `cd` to `src/message/`
+
+- Make a `.env` file with `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` set to your account SID and Auth Token 
+
+- macOS: `brew tap twilio/brew && brew install twilio`
+
+- `twilio login`
+
+- `pip install twilio`
