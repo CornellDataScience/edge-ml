@@ -1,3 +1,4 @@
+import sklearn
 import threading
 import tensorflow as tf
 from tensorflow.keras.optimizers import Adam
@@ -14,6 +15,7 @@ from watchdog.events import PatternMatchingEventHandler
 import threading
 from Siamese_Network import SiameseNetwork
 from PIL import Image
+from message import sms_message
 
 
 WIDTH = HEIGHT = 105
@@ -38,7 +40,6 @@ def preprocess_image(filename):
     img = img.reshape(1, WIDTH, HEIGHT, CEELS)
 
     return img
-
 
 # load the model
 siamese = SiameseNetwork(
@@ -66,7 +67,14 @@ def get_similarity_score(img_path):
 
     # add a dimension to the tensor
     # get embeddings
-    siamese.predict([david_2, david_1], ["David Han"])
+    prob = siamese.predict([david_2, david_1], ["David Han"])
+    # positive_similarity = cosine_similarity(anchor_embedding, positive_embedding)
+    # print(f"Similarity score for {img_path}: ", positive_similarity.numpy())
+    print(f"Probability of David: {prob}", prob)
+    threshold = 0.8
+    print("Sending message")
+    # sms_message.send_message(positive_similarity.numpy() < threshold)
+    sms_message.send_message(prob < threshold)
 
 
 # set up on created

@@ -1,10 +1,12 @@
+from sklearn.model_selection import train_test_split
+
 import os
 import pickle
 import random
 
 import numpy as np
 import tensorflow as tf
-from sklearn.model_selection import train_test_split
+
 from tensorflow.keras import Input, Sequential, Model
 from tensorflow.keras import backend as K
 from tensorflow.keras.callbacks import EarlyStopping
@@ -279,10 +281,10 @@ class SiameseNetwork(object):
     def predict(self, x_test, names):
         prob = self.siamese_net.predict(x_test)
 
-        for pair_index in range(len(names)):
-            name = names[pair_index]
-            pair_prob = prob[pair_index][0]
-            print(f"Similar to {name} with probability: ", pair_prob)
+        name = names[0]
+        pair_prob = prob[0][0]
+        print(f"Similar to {name} with probability: ", pair_prob)
+        return pair_prob
 
     def _analyze(self, x_test, y_test, names):
         """

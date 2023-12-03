@@ -15,4 +15,13 @@ Images/**
 **/cmake_install.cmake
 **/CMakeCache.txt
 camera
+CMakeFiles/**
+**/.env
+src/lfwa/**
+**/__pycache__/**
+src/model/message/__pycache__/**
+src/model/__pycache__/utils.cpython-38.pyc
+src/model/message/__pycache__/__init__.cpython-38.pyc
+src/model/message/__pycache__/sms_message.cpython-38.pyc
+**/Makefile
 src/lfwa/**
