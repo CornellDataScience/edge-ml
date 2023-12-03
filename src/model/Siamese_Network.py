@@ -216,7 +216,8 @@ class SiameseNetwork(object):
         y_val_both = np.array(y_val_0, dtype="float64")
         # if not self._load_weights(weights_file=weights_file):
         # need to load weights and continue training here
-        if self._load_weights(weights_file=weights_file):
+        # I'm also lazy and don't want to fix indenting so if True :D
+        if True:
             # print("No such pre-existed weights file")
             print("Beginning to fit the model")
             callback = []
