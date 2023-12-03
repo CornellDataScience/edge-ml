@@ -46,7 +46,7 @@ siamese = SiameseNetwork(
     dropout_rate=0.4,
 )
 siamese._load_weights(
-    "lfwa/lfw2/weights/weights_seed_0_lr_5e-05_bs_32_ep_10_val_0.2_es_True_pa_5_md_0.1.h5"
+    "weights/weights_seed_0_lr_5e-05_bs_32_ep_10_val_0.2_es_True_pa_5_md_0.1.h5"
 )
 print("Model is done loading")
 

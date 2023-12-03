@@ -214,8 +214,10 @@ class SiameseNetwork(object):
             raise Exception("y train lists or y validation list do not equal")
         y_train_both = np.array(y_train_0, dtype="float64")
         y_val_both = np.array(y_val_0, dtype="float64")
-        if not self._load_weights(weights_file=weights_file):
-            print("No such pre-existed weights file")
+        # if not self._load_weights(weights_file=weights_file):
+        # need to load weights and continue training here
+        if self._load_weights(weights_file=weights_file):
+            # print("No such pre-existed weights file")
             print("Beginning to fit the model")
             callback = []
             if early_stopping:

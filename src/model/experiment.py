@@ -8,7 +8,7 @@ import tensorflow as tf
 from tensorflow.keras.optimizers import Adam
 
 from data_loader import DataLoader
-from siamese_network import SiameseNetwork
+from Siamese_Network import SiameseNetwork
 
 
 path_separator = os.path.sep
