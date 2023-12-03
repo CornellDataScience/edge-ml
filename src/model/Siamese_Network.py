@@ -1,171 +1,361 @@
-# https://keras.io/examples/vision/siamese_network/
-
 import os
+import pickle
 import random
+
+import numpy as np
 import tensorflow as tf
-from pathlib import Path
+from sklearn.model_selection import train_test_split
+from tensorflow.keras import Input, Sequential, Model
+from tensorflow.keras import backend as K
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.layers import (
+    Conv2D,
+    MaxPooling2D,
+    Flatten,
+    Dense,
+    Lambda,
+    BatchNormalization,
+    Activation,
+    Dropout,
+)
+from tensorflow.keras.regularizers import l2
 
-from utils import preprocess_image, preprocess_triplets
 
-from tensorflow.keras import layers
-from tensorflow.keras import optimizers
-from tensorflow.keras import metrics
-from tensorflow.keras import Model
-from tensorflow.keras.applications import resnet
+class SiameseNetwork(object):
+    def __init__(
+        self, seed, width, height, cells, loss, metrics, optimizer, dropout_rate
+    ):
+        """
+        Seed - The seed used to initialize the weights
+        width, height, cells - used for defining the tensors used for the input images
+        loss, metrics, optimizer, dropout_rate - settings used for compiling the siamese model (e.g., 'Accuracy' and 'ADAM)
+        """
+        K.clear_session()
+        self.load_file = None
+        self.seed = seed
+        self.initialize_seed()
+        self.optimizer = optimizer
 
-target_shape = (200, 200)
+        # Define the matrices for the input images
+        input_shape = (width, height, cells)
+        left_input = Input(input_shape)
+        right_input = Input(input_shape)
 
-cache_dir = Path().resolve() / "keras"
-anchor_images_path = cache_dir / "left"
-positive_images_path = cache_dir / "right"
+        # Get the CNN architecture as presented in the paper (read the readme for more information)
+        model = self._get_architecture(input_shape)
+        encoded_l = model(left_input)
+        encoded_r = model(right_input)
 
-class DistanceLayer(layers.Layer):
-    """
-    This layer is responsible for computing the distance between the anchor
-    embedding and the positive embedding, and the anchor embedding and the
-    negative embedding.
-    """
+        # Add a layer to combine the two CNNs
+        L1_layer = Lambda(lambda tensors: K.abs(tensors[0] - tensors[1]))
+        L1_siamese_dist = L1_layer([encoded_l, encoded_r])
+        L1_siamese_dist = Dropout(dropout_rate)(L1_siamese_dist)
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        # An output layer with Sigmoid activation function
+        prediction = Dense(
+            1, activation="sigmoid", bias_initializer=self.initialize_bias
+        )(L1_siamese_dist)
 
-    def call(self, anchor, positive, negative):
-        ap_distance = tf.reduce_sum(tf.square(anchor - positive), -1)
-        an_distance = tf.reduce_sum(tf.square(anchor - negative), -1)
-        return (ap_distance, an_distance)
+        siamese_net = Model(inputs=[left_input, right_input], outputs=prediction)
+        self.siamese_net = siamese_net
+        self.siamese_net.compile(loss=loss, optimizer=optimizer, metrics=metrics)
 
-class SiameseModel(Model):
-    """The Siamese Network model with a custom training and testing loops.
+    def initialize_seed(self):
+        """
+        Initialize seed all for environment
+        """
+        os.environ["PYTHONHASHSEED"] = str(self.seed)
+        random.seed(self.seed)
+        np.random.seed(self.seed)
+        tf.random.set_seed(self.seed)
 
-    Computes the triplet loss using the three embeddings produced by the
-    Siamese Network.
-
-    The triplet loss is defined as:
-       L(A, P, N) = max(‖f(A) - f(P)‖² - ‖f(A) - f(N)‖² + margin, 0)
-    """
-
-    def __init__(self, siamese_network, margin=0.5):
-        super().__init__()
-        self.siamese_network = siamese_network
-        self.margin = margin
-        self.loss_tracker = metrics.Mean(name="loss")
-
-    def call(self, inputs):
-        return self.siamese_network(inputs)
-
-    def train_step(self, data):
-        # GradientTape is a context manager that records every operation that
-        # you do inside. We are using it here to compute the loss so we can get
-        # the gradients and apply them using the optimizer specified in
-        # `compile()`.
-        with tf.GradientTape() as tape:
-            loss = self._compute_loss(data)
-
-        # Storing the gradients of the loss function with respect to the
-        # weights/parameters.
-        gradients = tape.gradient(loss, self.siamese_network.trainable_weights)
-
-        # Applying the gradients on the model using the specified optimizer
-        self.optimizer.apply_gradients(
-            zip(gradients, self.siamese_network.trainable_weights)
+    def initialize_weights(self, shape, dtype=None):
+        """
+        Called when initializing the weights of the siamese model, uses the random_normal function of keras to return a
+        tensor with a normal distribution of weights.
+        """
+        return K.random_normal(
+            shape, mean=0.0, stddev=0.01, dtype=dtype, seed=self.seed
         )
 
-        # Let's update and return the training loss metric.
-        self.loss_tracker.update_state(loss)
-        return {"loss": self.loss_tracker.result()}
+    def initialize_bias(self, shape, dtype=None):
+        """
+        Called when initializing the biases of the siamese model, uses the random_normal function of keras to return a
+        tensor with a normal distribution of weights.
+        """
+        return K.random_normal(
+            shape, mean=0.5, stddev=0.01, dtype=dtype, seed=self.seed
+        )
 
-    def test_step(self, data):
-        loss = self._compute_loss(data)
+    def _get_architecture(self, input_shape):
+        """
+        Returns a Convolutional Neural Network based on the input shape given of the images. This is the CNN network
+        that is used inside the siamese model. Uses parameters from the siamese one shot paper.
+        """
+        model = Sequential()
+        model.add(
+            Conv2D(
+                filters=64,
+                kernel_size=(10, 10),
+                input_shape=input_shape,
+                kernel_initializer=self.initialize_weights,
+                kernel_regularizer=l2(2e-4),
+                name="Conv1",
+            )
+        )
+        model.add(BatchNormalization())
+        model.add(Activation("relu"))
+        model.add(MaxPooling2D())
 
-        # Let's update and return the loss metric.
-        self.loss_tracker.update_state(loss)
-        return {"loss": self.loss_tracker.result()}
+        model.add(
+            Conv2D(
+                filters=128,
+                kernel_size=(7, 7),
+                kernel_initializer=self.initialize_weights,
+                bias_initializer=self.initialize_bias,
+                kernel_regularizer=l2(2e-4),
+                name="Conv2",
+            )
+        )
+        model.add(BatchNormalization())
+        model.add(Activation("relu"))
+        model.add(MaxPooling2D())
 
-    def _compute_loss(self, data):
-        # The output of the network is a tuple containing the distances
-        # between the anchor and the positive example, and the anchor and
-        # the negative example.
-        ap_distance, an_distance = self.siamese_network(data)
+        model.add(
+            Conv2D(
+                filters=128,
+                kernel_size=(4, 4),
+                kernel_initializer=self.initialize_weights,
+                bias_initializer=self.initialize_bias,
+                kernel_regularizer=l2(2e-4),
+                name="Conv3",
+            )
+        )
+        model.add(BatchNormalization())
+        model.add(Activation("relu"))
+        model.add(MaxPooling2D())
 
-        # Computing the Triplet Loss by subtracting both distances and
-        # making sure we don't get a negative value.
-        loss = ap_distance - an_distance
-        loss = tf.maximum(loss + self.margin, 0.0)
-        return loss
+        model.add(
+            Conv2D(
+                filters=256,
+                kernel_size=(4, 4),
+                kernel_initializer=self.initialize_weights,
+                bias_initializer=self.initialize_bias,
+                kernel_regularizer=l2(2e-4),
+                name="Conv4",
+            )
+        )
+        model.add(BatchNormalization())
+        model.add(Activation("relu"))
 
-    @property
-    def metrics(self):
-        # We need to list our metrics here so the `reset_states()` can be
-        # called automatically.
-        return [self.loss_tracker]
+        model.add(Flatten())
+        model.add(
+            Dense(
+                4096,
+                activation="sigmoid",
+                kernel_initializer=self.initialize_weights,
+                kernel_regularizer=l2(2e-3),
+                bias_initializer=self.initialize_bias,
+            )
+        )
+        return model
+
+    def _load_weights(self, weights_file):
+        """
+        A function that attempts to load pre-existing weight files for the siamese model. If it succeeds then returns
+        True and updates the weights, otherwise False.
+        :return True if the file is already exists
+        """
+        # self.siamese_net.summary()
+        self.load_file = weights_file
+        if os.path.exists(
+            weights_file
+        ):  # if the file is already exists, load and return true
+            print("Loading pre-existed weights file")
+            self.siamese_net.load_weights(weights_file)
+            return True
+        return False
+
+    def fit(
+        self,
+        weights_file,
+        train_path,
+        validation_size,
+        batch_size,
+        epochs,
+        early_stopping,
+        patience,
+        min_delta,
+    ):
+        """
+        Function for fitting the model. If the weights already exist, just return the summary of the model. Otherwise,
+        perform a whole train/validation/test split and train the model with the given parameters.
+        """
+        with open(train_path, "rb") as f:
+            x_train, y_train, names = pickle.load(f)
+        """
+        X_train[0]:  |----------x_train_0---------------------------|-------x_val_0--------|
+        X_train[1]:  |----------x_train_1---------------------------|-------x_val_1--------|
+        y_train:     |----------y_train_0 = y_train_1---------------|----y_val_0=y_val_1---|
+        """
+        x_train_0, x_val_0, y_train_0, y_val_0 = train_test_split(
+            x_train[0], y_train, test_size=validation_size, random_state=self.seed
+        )
+        x_train_1, x_val_1, y_train_1, y_val_1 = train_test_split(
+            x_train[1], y_train, test_size=validation_size, random_state=self.seed
+        )
+        x_train_0 = np.array(x_train_0, dtype="float64")
+        x_val_0 = np.array(x_val_0, dtype="float64")
+        x_train_1 = np.array(x_train_1, dtype="float64")
+        x_val_1 = np.array(x_val_1, dtype="float64")
+        x_train = [x_train_0, x_train_1]
+        x_val = [x_val_0, x_val_1]
+        if y_train_0 != y_train_1 and y_val_0 != y_val_1:
+            raise Exception("y train lists or y validation list do not equal")
+        y_train_both = np.array(y_train_0, dtype="float64")
+        y_val_both = np.array(y_val_0, dtype="float64")
+        # if not self._load_weights(weights_file=weights_file):
+        # need to load weights and continue training here
+        # I'm also lazy and don't want to fix indenting so if True :D
+        if True:
+            # print("No such pre-existed weights file")
+            print("Beginning to fit the model")
+            callback = []
+            if early_stopping:
+                """
+                We used the EarlyStopping function monitoring on the validation loss with a minimum delta of 0.1
+                (Minimum change in the monitored quantity to qualify as an improvement, i.e.
+                an absolute change of less than min_delta, will count as no improvement.) and patience 5
+                (Number of epochs with no improvement after which training will be stopped.).
+                The direction is automatically inferred from the name of the monitored quantity (‘auto’).
+                """
+                es = EarlyStopping(
+                    monitor="val_loss",
+                    min_delta=min_delta,
+                    patience=patience,
+                    mode="auto",
+                    verbose=1,
+                )
+                callback.append(es)
+            self.siamese_net.fit(
+                x_train,
+                y_train_both,
+                batch_size=batch_size,
+                epochs=epochs,
+                validation_data=(x_val, y_val_both),
+                callbacks=callback,
+                verbose=1,
+            )
+            self.siamese_net.save_weights(self.load_file)
+        # evaluate on the testing set
+        loss, accuracy = self.siamese_net.evaluate(
+            x_val, y_val_both, batch_size=batch_size
+        )
+        print(f"Loss on Validation set: {loss}")
+        print(f"Accuracy on Validation set: {accuracy}")
+
+    def evaluate(self, test_file, batch_size, analyze=False):
+        """
+        Function for evaluating the final model after training.
+        test_file - file path to the test file.
+        batch_size - the batch size used in training.
+
+        Returns the loss and accuracy results.
+        """
+        with open(test_file, "rb") as f:
+            x_test, y_test, names = pickle.load(f)
+        print(f"Available Metrics: {self.siamese_net.metrics_names}")
+        y_test = np.array(y_test, dtype="float64")
+        x_test[0] = np.array(x_test[0], dtype="float64")
+        x_test[1] = np.array(x_test[1], dtype="float64")
+        # evaluate on the test set
+        loss, accuracy = self.siamese_net.evaluate(
+            x_test, y_test, batch_size=batch_size
+        )
+        if analyze:
+            self._analyze(x_test, y_test, names)
+        return loss, accuracy
+
+    def predict(self, x_test, names):
+        prob = self.siamese_net.predict(x_test)
+
+        for pair_index in range(len(names)):
+            name = names[pair_index]
+            pair_prob = prob[pair_index][0]
+            print(f"Similar to {name} with probability: ", pair_prob)
+
+    def _analyze(self, x_test, y_test, names):
+        """
+        Function used for evaluating our network in the methods proposed in the assignment.
+        We will find:
+        - The person who has 2 images that are the most dissimilar to each other
+        - The person with the two images that are the most similar to each other
+        - Two people with the most dissimilar images, and
+        - The two people with the most similar images.
+        """
+
+        best_class_0_prob = (
+            1  # correct classification for different people, y=0, prediction->0
+        )
+        best_class_0_name = None
+        worst_class_0_prob = (
+            0  # misclassification for different people, y=0, prediction->1
+        )
+        worst_class_0_name = None
+        best_class_1_prob = (
+            0  # correct classification for same people, y=1, prediction->1
+        )
+        best_class_1_name = None
+        worst_class_1_prob = 1  # misclassification for same people, y=1, prediction->0
+        worst_class_1_name = None
+        print(len(x_test))
+        print(x_test[0].shape)
+        prob = self.siamese_net.predict(x_test)
+
+        for pair_index in range(len(names)):
+            name = names[pair_index]
+            y_pair = y_test[pair_index]
+            if pair_index == 0:
+                x_pair = x_test[pair_index]
+                print(x_pair)
+                print(type(x_pair))
+                print(x_pair.shape)
+            pair_prob = prob[pair_index][0]
+            if y_pair == 0:  # different people (actual)
+                if (
+                    pair_prob < best_class_0_prob
+                ):  # correct classification for different people, y=0, prediction->0
+                    best_class_0_prob = pair_prob
+                    best_class_0_name = name
+                if (
+                    pair_prob > worst_class_0_prob
+                ):  # misclassification for different people, y=0, prediction->1
+                    worst_class_0_prob = pair_prob
+                    worst_class_0_name = name
+            else:  # the same person (actual)
+                if (
+                    pair_prob > best_class_1_prob
+                ):  # correct classification for same people, y=1, prediction->1
+                    best_class_1_prob = pair_prob
+                    best_class_1_name = name
+                if (
+                    pair_prob < worst_class_1_prob
+                ):  # misclassification for same people, y=1, prediction->0
+                    worst_class_1_prob = pair_prob
+                    worst_class_1_name = name
+
+        print(
+            f"correct classification for different people, y=0, prediction->0, name: {best_class_0_name} | prob: {best_class_0_prob}"
+        )
+        print(
+            f"misclassification for different people, y=0, prediction->1, name: {worst_class_0_name} | prob: {worst_class_0_prob}"
+        )
+        print(
+            f"correct classification for same people, y=1, prediction->1, name: {best_class_1_name} | prob: {best_class_1_prob}"
+        )
+        print(
+            f"misclassification for same people, y=1, prediction->0, name: {worst_class_1_name} | prob: {worst_class_1_prob}"
+        )
 
 
-# We need to make sure both the anchor and positive images are loaded in
-# sorted order so we can match them together.
-anchor_images = sorted(
-    [str(anchor_images_path / f) for f in os.listdir(anchor_images_path)]
-)
-
-positive_images = sorted(
-    [str(positive_images_path / f) for f in os.listdir(positive_images_path)]
-)
-
-all_images = anchor_images + positive_images
-random.shuffle(all_images)
-
-image_count = len(anchor_images)
-
-anchor_dataset = tf.data.Dataset.from_tensor_slices(anchor_images)
-positive_dataset = tf.data.Dataset.from_tensor_slices(positive_images)
-negative_dataset = tf.data.Dataset.from_tensor_slices(all_images[:100])
-
-dataset = tf.data.Dataset.zip((anchor_dataset, positive_dataset, negative_dataset))
-dataset = dataset.shuffle(buffer_size=1024)
-dataset = dataset.map(preprocess_triplets)
-
-# Let's now split our dataset in train and validation.
-train_dataset = dataset.take(round(image_count * 0.8))
-val_dataset = dataset.skip(round(image_count * 0.8))
-
-batch_size = 16
-
-train_dataset = train_dataset.batch(batch_size, drop_remainder=False).prefetch(8)
-val_dataset = val_dataset.batch(batch_size, drop_remainder=False).prefetch(8)
-
-base_cnn = resnet.ResNet50(
-    weights="imagenet", input_shape=target_shape + (3,), include_top=False
-)
-
-flatten = layers.Flatten()(base_cnn.output)
-dense1 = layers.BatchNormalization()(layers.Dense(512, activation="relu")(flatten))
-dense2 = layers.BatchNormalization()(layers.Dense(256, activation="relu")(dense1))
-output = layers.Dense(256)(dense2)
-
-embedding = Model(base_cnn.input, output, name="Embedding")
-
-trainable = False
-for layer in base_cnn.layers:
-    if layer.name == "conv5_block1_out":
-        trainable = True
-    layer.trainable = trainable
-
-anchor_input = layers.Input(name="anchor", shape=target_shape + (3,))
-positive_input = layers.Input(name="positive", shape=target_shape + (3,))
-negative_input = layers.Input(name="negative", shape=target_shape + (3,))
-
-distances = DistanceLayer()(
-    embedding(resnet.preprocess_input(anchor_input)),
-    embedding(resnet.preprocess_input(positive_input)),
-    embedding(resnet.preprocess_input(negative_input)),
-)
-
-siamese_network = Model(
-    inputs=[anchor_input, positive_input, negative_input], outputs=distances
-)
-
-# Training
-siamese_model = SiameseModel(siamese_network)
-siamese_model.compile(optimizer=optimizers.Adam(0.0001))  # 0..0001
-siamese_model.fit(train_dataset, epochs=7, validation_data=val_dataset)
-embedding.save_weights("weights/embedding_weights.h5")
-siamese_model.save_weights("weights/siamese_weights.h5")
+print("Loaded Siamese Network")
