@@ -16,5 +16,5 @@ Images/**
 **/CMakeCache.txt
 camera
 CMakeFiles/**
-src/message/.env
+**/.env
 
