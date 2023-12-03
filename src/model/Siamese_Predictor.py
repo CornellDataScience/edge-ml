@@ -15,6 +15,7 @@ from watchdog.events import PatternMatchingEventHandler
 import threading
 from Siamese_Network import SiameseNetwork
 from PIL import Image
+from message import sms_message
 
 
 WIDTH = HEIGHT = 105
@@ -39,9 +40,6 @@ def preprocess_image(filename):
     img = img.reshape(1, WIDTH, HEIGHT, CEELS)
 
     return img
-
-
-from message import sms_message
 
 # load the model
 siamese = SiameseNetwork(
@@ -77,6 +75,7 @@ def get_similarity_score(img_path):
     print("Sending message")
     # sms_message.send_message(positive_similarity.numpy() < threshold)
     sms_message.send_message(prob < threshold)
+
 
 # set up on created
 def on_created(event):

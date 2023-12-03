@@ -24,3 +24,4 @@ src/model/__pycache__/utils.cpython-38.pyc
 src/model/message/__pycache__/__init__.cpython-38.pyc
 src/model/message/__pycache__/sms_message.cpython-38.pyc
 **/Makefile
+src/lfwa/**
