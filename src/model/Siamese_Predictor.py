@@ -10,6 +10,8 @@ from tensorflow.keras import metrics
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 
+from message import sms_message
+
 # load the model
 embedding = tf.keras.models.load_model("siamese_weights.h5", compile=False)
 print("Model is done loading")
@@ -24,7 +26,7 @@ def get_similarity_score(img_path):
     
     # add a dimension to the tensor
     david_1 = tf.expand_dims(david_1, axis=0)
-    
+   
     # get embeddings
     anchor_embedding, positive_embedding = (
         embedding(resnet.preprocess_input(david_1)),
@@ -36,6 +38,9 @@ def get_similarity_score(img_path):
 
     positive_similarity = cosine_similarity(anchor_embedding, positive_embedding)
     print(f"Similarity score for {img_path}: ", positive_similarity.numpy())
+    threshold = 0.999
+    print("Sending message")
+    sms_message.send_message(positive_similarity.numpy() < threshold)
 
 # set up on created
 def on_created(event):

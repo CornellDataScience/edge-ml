@@ -11,14 +11,10 @@ from_number =   '+18886815709'
 to_number =     '+19788814542'
 
 def send_message(intruder_detected):
-    msg = "Intruder Alert! 👽" if intruder_detected else "Welcome!"
+    msg = "Intruder Alert!" if intruder_detected else "Welcome!"
     client = Client(account_sid, auth_token)
-    message = client.messages \
-                    .create(
+    message = client.messages.create(
                         body=msg,
                         from_=from_number,
-                        to=to_number
-                    )
-    # print(message.sid)
+                        to=to_number)
 
-# send_message(True)
