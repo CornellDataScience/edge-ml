@@ -1,5 +1,5 @@
-import os 
-from twilio.rest import Client 
+import os
+from twilio.rest import Client
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -17,4 +17,3 @@ def send_message(intruder_detected):
                         body=msg,
                         from_=from_number,
                         to=to_number)
-
