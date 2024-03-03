@@ -2,6 +2,7 @@ import tensorflow as tf
 
 target_shape = (200, 200)
 
+
 def preprocess_image(filename):
     """
     Load the specified file as a JPEG image, preprocess it and

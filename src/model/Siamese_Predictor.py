@@ -41,6 +41,7 @@ def preprocess_image(filename):
 
     return img
 
+
 # load the model
 siamese = SiameseNetwork(
     seed=seed,
