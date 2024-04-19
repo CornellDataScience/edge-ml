@@ -103,9 +103,8 @@ def register():
 
     return render_template('register.html')
 
+
 # logout route
-
-
 @app.route('/logout')
 @login_required
 def logout():
