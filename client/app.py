@@ -1,4 +1,5 @@
 from flask import flash, Flask, render_template, request, redirect, url_for
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from pymongo.mongo_client import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
@@ -12,6 +13,14 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 
+# Initialize the Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# non-auth yser
+login_manager.login_view = 'login'
+login_manager.login_message_category = "warning"
+
 # mongo client, add IP to db on website
 uri = os.getenv("MONGODB_URI")
 client = MongoClient(uri)
@@ -19,6 +28,21 @@ client = MongoClient(uri)
 # accessing db for login
 db = client['auth']
 users = db.users
+
+
+# User class for flask-login
+class User(UserMixin):
+    def __init__(self, email, password):
+        self.id = email
+        self.password = password
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    u = users.find_one({"email": user_id})
+    if not u:
+        return None
+    return User(u['email'], u['password'])
 
 
 # landing page
@@ -46,7 +70,9 @@ def login():
         # check if user exists and pwd is correct
         if user and check_password_hash(user['password'], password):
             print("pwd is correct hooray")
-            return redirect(url_for('home'))
+            user_obj = User(user['email'], user['password'])
+            login_user(user_obj)  # remember to call this to login the user
+            return redirect(url_for('protected'))
         else:
             flash('Invalid username/password', 'error')  # noti. indicator
             return redirect(url_for('login'))
@@ -76,6 +102,22 @@ def register():
             return redirect(url_for('register'))
 
     return render_template('register.html')
+
+# logout route
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+
+# protected pages
+@app.route('/protected')
+@login_required
+def protected():
+    return "You are seeing this because you are logged in!"
 
 
 if __name__ == '__main__':
