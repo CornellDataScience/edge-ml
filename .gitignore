@@ -7,6 +7,8 @@ src/model/david/**
 venv/**
 build/**
 Images/**
+client/.env
 
 *.DS_Store
 .vscode/
+.env
