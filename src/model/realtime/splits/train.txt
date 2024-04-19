@@ -1,5 +1,0 @@
-David_Han     1 5
-David_Han     2 6
-David_Han     3 7
-David_Han     4 8
-David_Han     5 10
