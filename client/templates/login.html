@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>EdgeML - Sign In</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0, viewport-fit=cover">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login/login.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login/login-bundle.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/alert.css') }}">
+</head>
+
+<body>
+  <div class=" tmp-shell tds--fade-in">
+    <header id="tds-site-header"
+      class="tds-theme-site-header tds-site-header tds-site-header--light tds--fade-in tds-shell-masthead--is_sticky"
+      style="padding-left: 5%;">
+      <!-- logo, top-left -->
+      <h1>
+        <a href="/">
+          <img src="{{ url_for('static', filename='img/logo.png') }}" alt="EdgeML Logo" style="height: 50%;">
+        </a>
+      </h1>
+    </header>
+
+    <main id="main-content" class="tmp-shell-row tmp-shell-row--stretch" style="padding-top: 8%;">
+      <div class="tds-content_container tds-content_container--medium" id="container">
+        <div class="single-column-form-wrapper">
+
+          <!-- sign in text -->
+          <h1 class="tds-text--h1-alt tds-text-eyebrow">Sign In</h1>
+
+
+          <!-- flash alerts -->
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+          </div>
+          {% endfor %}
+          {% endif %}
+          {% endwith %}
+
+          <!-- email field -->
+          <form method="POST" action="/login" class="sso-form sign-in-form">
+            <div class="tds-form-item tds--vertical_padding">
+              <label class="tds-form-label">
+                <span>E-mail</span>
+              </label>
+              <div class="tds-form-input tds-form-input--default">
+                <input class="tds-form-input-password" id="email" name="email" autocomplete="off" autocorrect="off"
+                  autocapitalize="none" aria-label="password" required="" autofocus="">
+              </div>
+            </div>
+
+            <!-- password field -->
+            <div class="tds-form-item tds--vertical_padding">
+              <label class="tds-form-label">
+                <span>Password</span>
+              </label>
+              <div class="tds-form-input tds-form-input--default">
+                <input class="tds-form-input-password" id="password" type="password" name="password" autocomplete="off"
+                  autocorrect="off" autocapitalize="none" aria-label="password" required="" autofocus="">
+              </div>
+            </div>
+
+            <!-- signin button -->
+            <button id="form-submit-continue" type="submit" class="tds-btn tds-btn--primary tds-btn--full">Sign
+              In</button>
+          </form>
+
+          <!-- forgot pwd -->
+          <p class=" need-help tds-text--center">
+            <a href="https://www.google.com/search?q=unlucky+&sca_esv=23c7f8c8f2dc8e93&sca_upv=1&udm=2&biw=1463&bih=1004&ei=ic0hZqTqCeuj5NoPgbiE6As&ved=0ahUKEwjk0ujTlM2FAxXrEVkFHQEcAb0Q4dUDCBA&uact=5&oq=unlucky+&gs_lp=Egxnd3Mtd2l6LXNlcnAiCHVubHVja3kgMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABEi4BlADWOoDcAF4AJABAJgBSaABhwGqAQEyuAEDyAEA-AEBmAICoAKPAZgDAIgGAZIHATKgB9oJ&sclient=gws-wiz-serp#vhid=D95mUM0iqXEM3M&vssid=mosaic"
+              class="tds-link">Forgot
+              password?</a>
+          </p>
+
+          <!-- or divider -->
+          <span class="linebreak tds-text--500">Or</span>
+
+          <!-- create account button -->
+          <a href="/register"><button class="tds-btn tds-btn--tertiary tds-btn--full">Create Account</button></a>
+        </div>
+      </div>
+    </main>
+
+
+    <!-- footer -->
+    <footer class="tds-footer tds-footer--centered" style="position: absolute; bottom: 0; width: 100%;">
+      <div class="tds-container">
+        <ul class="tds-footer-meta">
+          <li class="tds-footer-list_item">
+            EdgeML © 2024
+          </li>
+        </ul>
+      </div>
+    </footer>
+
+  </div>
+</body>
+
+</html>

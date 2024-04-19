@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" style="--vh: 11.1px;">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>EdgeML - Register</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0, viewport-fit=cover">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/register/register.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/register/register.bundle.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/alert.css') }}">
+</head>
+
+<body>
+  <div class="tmp-shell tds--fade-in">
+    <header id="tds-site-header"
+      class="tds-theme-site-header tds-site-header tds-site-header--light tds--fade-in tds-shell-masthead--is_sticky"
+      style=" padding-left: 5%;">
+      <!-- logo, top-left -->
+      <h1>
+        <a href="/">
+          <img src="{{ url_for('static', filename='img/logo.png') }}" alt="EdgeML Logo" style="height: 50%;">
+        </a>
+      </h1>
+    </header>
+
+    <main class="tmp-shell-row tmp-shell-row--stretch">
+      <div class="tds-content_container tds-content_container--medium" id="container">
+        <div class="single-column-form-wrapper" style="margin-bottom: 150px;">
+          <h1 class="tds-text--h1-alt tds-text-eyebrow header-width" data-i18n-key="register:pageHeader">Create Account
+          </h1>
+
+          <!-- flash alerts -->
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+          </div>
+          {% endfor %}
+          {% endif %}
+          {% endwith %}
+
+
+          <form method="post">
+            <!-- EMAIL FIELD -->
+            <div class="tds-form-item tds--vertical_padding" data-field="email">
+              <label class="tds-form-label" for="form-input-email">
+                <span data-i18n-key="common:email">E-mail</span>
+              </label>
+              <div class="tds-form-input tds-form-input--default">
+                <input class="tds-form-input-text" autocapitalize="none" autocomplete="off" id="email" name="email"
+                  type="email" inputmode="email" value="" data-onkeyup="onChangeAction" required>
+              </div>
+            </div>
+
+
+            <!-- PASSWORD FIELD -->
+            <div class="tds-form-item" data-field="password">
+              <div class="tds-tooltip-wrapper tds-tooltip-wrapper--inline">
+                <label class="tds-form-label" for="form-input-password">
+                  <span data-i18n-key="register:formPasswordLabel">Password</span>
+                </label>
+              </div>
+              <div class="tds-form-input tds-form-input--default" style="margin-block-start: 8px">
+                <input class="tds-form-input-password" id="password" name="password" type="password" autocomplete="off"
+                  data-onkeyup="onChangeAction" required>
+              </div>
+              <div class="tds-form-feedback">
+                <p class="tds-form-feedback-text"></p>
+              </div>
+            </div>
+            <div>
+              <p class="tds--vertical_padding tds-form-caption">Learn
+                about
+                <a class="tds-link" data-id="updates-link" target="_blank" rel="noopener noreferrer" href="">EdgeML Data
+                  Collection</a>
+              </p>
+            </div>
+            <button class="tds-btn tds-btn--primary tds-btn--full" data-i18n-key="register:pageHeader" id="form-submit"
+              type="submit">Create Account</button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <!-- footer -->
+    <footer class="tds-footer tds-footer--centered">
+      <div class="tds-container">
+        <ul class="tds-footer-meta">
+          <li class="tds-footer-list_item">
+            <a href="" class="tds-link tds-link--secondary" target="_blank" rel="noreferrer noopener">Tesla © 2024</a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+
+  </div>
+</body>
+
+</html>
