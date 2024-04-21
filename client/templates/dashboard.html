@@ -5,8 +5,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <link href="{{ url_for('static', filename='css/dashboard/main.css') }}" rel="stylesheet">
-  <title>Dashboard | EdgeML</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard/dashboard.chunk.css') }}">
+  <title>Dashboard | EdgeML</title>
 </head>
 
 <body class="tds-scrim--white">
@@ -92,7 +92,7 @@
                       d="M16.89 8.576 9.004.692a.657.657 0 0 0-.929 0L1.544 7.225h-.011v.01L.193 8.577a.657.657 0 1 0 .928.93l.412-.412v7.393c0 .362.294.657.657.657h4.38a.657.657 0 0 0 .657-.657V11.45h2.628v5.037c0 .362.294.657.657.657h4.38a.657.657 0 0 0 .657-.657V9.094l.411.411a.654.654 0 0 0 .93 0 .657.657 0 0 0 0-.929Zm-2.655 7.254h-3.066v-5.037a.657.657 0 0 0-.657-.657H6.57a.657.657 0 0 0-.657.657v5.037H2.847V7.78L8.54 2.086l5.694 5.694v8.05Z"
                       fill="#171A20" fill-rule="nonzero"></path>
                   </svg>
-                </div>My Products
+                </div>Home
               </a>
             </li>
             <li class="styles-module_NavigationLink__KnbW0 ">
@@ -123,45 +123,51 @@
           </ul>
         </aside>
         <main class="styles-module_Main__GkQU0 " id="main-content">
-          <h1 class="">My Products</h1>
+          <h1 class="">My Home</h1>
           <div style="visibility: visible;">
             <div data-test="teslaaccount-home">
               <div class="styles_Row__C2aOM">
-                <div class="styles_Tile__W4LCr    " data-test="teslaaccount-tile">
-                  <div class="styles_ImageBox__vHuKP">
-                    <button aria-hidden="true" tabindex="-1" type="button">
-                      <img src="./dashboard_files/saved_resource" alt="2023  Tesla Model 3" class=" ">
-                    </button>
-                  </div>
+
+                <!-- frame1 -->
+                <div class="styles_Tile__W4LCr" style="width: 625px; height: 500px;">
+                  <div style="padding: 10px;"></div> <!-- spacing for div-->
+                  <img src="{{ url_for('static', filename='img/grey.jpeg') }}" alt="EDGE_DEVICE_2"
+                    style="width: 100%; height: 87%;">
                   <div class="styles_TextWithButton__vsWFV">
                     <div class="">
-                      <p class="tds-text--500">2023 Tesla Model 3</p>
-                      <p class="tds-text_color--30">VIN 5YJ3E1EAXPF700660</p>
+                      <p class="tds-text--500">Edge Device 1</p>
+                      <p class="tds-text_color--30">NANO_DEFAULT_ID_1</p>
                     </div>
                     <div class="">
-                      <a class="tds-link tds-link styles_Link__QtsAa" href="" data-test="teslaaccount-vehicle-manage"
-                        aria-label="Manage 2023  Tesla Model 3 5YJ3E1EAXPF700660">Manage</a>
+                      <p>Indicator: True</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- frame2 -->
+                <div class="styles_Tile__W4LCr" style="width: 625px; height: 500px;">
+                  <div style="padding: 10px;"></div> <!-- spacing for div-->
+                  <!-- <img src="{{ url_for('static', filename='img/stock.webp') }}" alt="EDGE_DEVICE_2"
+                    style="width: 100%; height: 100%;"> -->
+                  <div class="styles_TextWithButton__vsWFV">
+                    <div class="">
+                      <p class="tds-text--500">Edge Device 2</p>
+                      <p class="tds-text_color--30">NANO_DEFAULT_ID_2</p>
+                    </div>
+                    <div>
+                      <p>Indicator: NA</p>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="styles_Row__C2aOM">
-                <div class="styles_Tile__W4LCr" data-test="teslaaccount-tile">
+                <div class="styles_Tile__W4LCr" style="width: 1250px;">
                   <div class="styles_ImageBox__vHuKP">
                     <img src="./dashboard_files/third-party-car_636x300_ed18888cb5f98.jpg" alt="">
                   </div>
                   <div class="styles_TextWithButton__vsWFV">
                     <div class="styles_ThirdPartyText__OWIxG styles_TileText__IUWhj">
-                      <div class="tds-text--500">Purchased a car from a third party?
-                        <div
-                          class="tds-tooltip-wrapper tds-tooltip-wrapper--inline styles_TooltipWrapperOverrides__lDcGi tds-text--400">
-                          <button type="button">
-                            <svg
-                              class="tds-icon tds-icon-info-small tds-icon--small tds-icon--inline tds-icon--text-bottom"
-                              viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            </svg>
-                          </button>
-                        </div>
+                      <div class="tds-text--500">Add a new device
                       </div>
                     </div>
                     <div class="">

@@ -108,6 +108,7 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
+    # endpoints go here
     return render_template('dashboard.html')
 
 
