@@ -109,7 +109,10 @@ def logout():
 @login_required
 def dashboard():
     # endpoints go here
-    return render_template('dashboard.html')
+    isIndicator = False
+    deviceName = "Edge Device #1"
+    deviceID = "DEFAULT_EDGE_DEVICE_ID_1"
+    return render_template('dashboard.html', deviceName=deviceName, deviceID=deviceID, isIndicator=isIndicator)
 
 
 if __name__ == '__main__':
