@@ -1,10 +1,10 @@
 from flask import flash, Flask, render_template, request, redirect, url_for
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from pymongo.mongo_client import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from dotenv import load_dotenv
-
+from models import User
 
 # load environment keys
 load_dotenv()
@@ -17,7 +17,7 @@ app.secret_key = os.getenv('SECRET_KEY')
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-# non-auth yser
+# non-auth user
 login_manager.login_view = 'login'
 login_manager.login_message_category = "warning"
 
@@ -28,13 +28,6 @@ client = MongoClient(uri)
 # accessing db for login
 db = client['auth']
 users = db.users
-
-
-# User class for flask-login
-class User(UserMixin):
-    def __init__(self, email, password):
-        self.id = email
-        self.password = password
 
 
 @login_manager.user_loader
@@ -60,7 +53,6 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
-
         # Retrieve data from form
         email = request.form.get('email')
         password = request.form.get('password')
@@ -72,7 +64,7 @@ def login():
             print("pwd is correct hooray")
             user_obj = User(user['email'], user['password'])
             login_user(user_obj)  # remember to call this to login the user
-            return redirect(url_for('protected'))
+            return redirect(url_for('dashboard'))
         else:
             flash('Invalid username/password', 'error')  # noti. indicator
             return redirect(url_for('login'))
@@ -109,14 +101,14 @@ def register():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('login'))
 
 
 # protected pages
-@app.route('/protected')
+@app.route('/dashboard')
 @login_required
-def protected():
-    return "You are seeing this because you are logged in!"
+def dashboard():
+    return render_template('dashboard.html')
 
 
 if __name__ == '__main__':
