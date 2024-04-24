@@ -61,7 +61,6 @@ def login():
         user = users.find_one({'email': email})
         # check if user exists and pwd is correct
         if user and check_password_hash(user['password'], password):
-            print("pwd is correct hooray")
             user_obj = User(user['email'], user['password'])
             login_user(user_obj)  # remember to call this to login the user
             return redirect(url_for('dashboard'))
@@ -109,10 +108,12 @@ def logout():
 @login_required
 def dashboard():
     # endpoints go here
+    # some if check to make sure system is connected to nano (therefore online)
+    systemStatus = "Online"
     isIndicator = False
     deviceName = "Edge Device #1"
     deviceID = "DEFAULT_EDGE_DEVICE_ID_1"
-    return render_template('dashboard.html', deviceName=deviceName, deviceID=deviceID, isIndicator=isIndicator)
+    return render_template('dashboard.html', systemStatus=systemStatus, deviceName=deviceName, deviceID=deviceID, isIndicator=isIndicator)
 
 
 if __name__ == '__main__':
