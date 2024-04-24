@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EdgeML by Cornell Data Science</title>
+  <link rel="preload" href="https://d2pas86kykpvmq.cloudfront.net/fonts/Garnett-Bold.ttf" as="font" crossorigin="">
+  <link rel="preload" href="https://d2pas86kykpvmq.cloudfront.net/fonts/Garnett-Medium.ttf" as="font" crossorigin="">
+  <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" type="text/css">
+</head>
+
+<body class="body">
+  <div id="app">
+    <section class="section">
+      <div class="hero">
+        <div class="header">
+          <div class="header-left">
+            <div class="text-logo"><span class="by-word">BY CORNELL DATA SCIENCE</span></div>
+          </div>
+        </div>
+        <div class="hero-text-wrapper">
+          <div class="limit-wrapper">
+            <div class="limit center">
+              <h1 class="h-1">EDGEML</h1>
+              <div class="hero-desc-wrapper">
+                <div class="text-body">SPRING 2024</div>
+                <center>
+                  <div class="text-body">
+                    <a style="text-decoration: none; color: white;" href="{{ url_for('login') }}">LOGIN</a>
+                  </div>
+                </center>
+                <div class="text-body"><a href="https://cornelldata.science/"
+                    style="text-decoration: none; color: white;" target="_blank">CORNELL DATA SCIENCE</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <video autoplay="" muted="" loop="" id="bg-video-1" loading="lazy">
+          <source type="video/mp4"
+            src="https://d2pas86kykpvmq.cloudfront.net/landings/animated-abstract/videos/hero.mp4">
+        </video>
+      </div>
+
+</html>
