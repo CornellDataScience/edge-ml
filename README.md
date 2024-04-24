@@ -31,3 +31,10 @@ Now, pre-commit will run automatically when you make a commit, and will fix file
 - `twilio login`
 
 - `pip install twilio`
+
+## Running the client
+
+- `python app.py` in `client/`
+- Make a `.env` file with `SECRET_KEY` and `MONGODB_URI`
+- `requirements.txt` in `client/`
+- http://127.0.0.1:5000

@@ -9,6 +9,13 @@ src/model/keras/**
 src/model/*.h5
 build/**
 Images/**
+<<<<<<< HEAD
+client/.env
+
+*.DS_Store
+.vscode/
+.env
+=======
 *.DS_Store
 .vscode/
 **/CMakeFiles/**
@@ -25,3 +32,4 @@ src/model/message/__pycache__/__init__.cpython-38.pyc
 src/model/message/__pycache__/sms_message.cpython-38.pyc
 **/Makefile
 src/lfwa/**
+>>>>>>> 95e4dfef02fcc764f14b95ea49cc67eb6c60beca

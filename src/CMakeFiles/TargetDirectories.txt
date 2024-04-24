@@ -1,0 +1,3 @@
+/Users/ryanho/documents/cornell/edge-ml/src/CMakeFiles/simple_camera.dir
+/Users/ryanho/documents/cornell/edge-ml/src/CMakeFiles/edit_cache.dir
+/Users/ryanho/documents/cornell/edge-ml/src/CMakeFiles/rebuild_cache.dir
