@@ -1,5 +1,6 @@
 #include "../utils/motion_detection.cpp"
 #include <chrono>
+#include <fstream>
 #include <iomanip>
 #include <opencv2/opencv.hpp>
 #include <sstream>
@@ -16,12 +17,38 @@ std::string current_time_formatted() {
   return ss.str();
 }
 
+std::string gstreamer_pipeline(int capture_width, int capture_height,
+                               int display_width, int display_height,
+                               int framerate, int flip_method) {
+  return "nvarguscamerasrc ! video/x-raw(memory:NVMM), width=(int)" +
+         std::to_string(capture_width) + ", height=(int)" +
+         std::to_string(capture_height) + ", framerate=(fraction)" +
+         std::to_string(framerate) +
+         "/1 ! nvvidconv flip-method=" + std::to_string(flip_method) +
+         " ! video/x-raw, width=(int)" + std::to_string(display_width) +
+         ", height=(int)" + std::to_string(display_height) +
+         ", format=(string)BGRx ! videoconvert ! video/x-raw, "
+         "format=(string)BGR ! appsink";
+}
+
 int main() {
   // default webcam caputre - change for jetson
-  int webcam_index = 0;
+  int capture_width = 1280;
+  int capture_height = 720;
+  int display_width = 1280;
+  int display_height = 720;
+  int default_framerate = 5;
+  int motion_framerate = 5;
+  int flip_method = 0;
+
+  std::string pipeline =
+      gstreamer_pipeline(capture_width, capture_height, display_width,
+                         display_height, default_framerate, flip_method);
+  std::cout << "Using pipeline: \n\t" << pipeline << "\n";
 
   // open the default camera
-  cv::VideoCapture cap(webcam_index);
+  cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER); // nano
+
   // error handling
   if (!cap.isOpened()) {
     std::cout << "Failed to open camera." << std::endl;
@@ -30,9 +57,9 @@ int main() {
 
   // load the face cascade
   cv::CascadeClassifier face_cascade;
-  if (!face_cascade.load(
-          "../utils/haarcascade_frontalface_default.xml")) // Update with
-                                                           // correct path
+  if (!face_cascade.load("/home/cds-nano-3/edge-ml/utils/"
+                         "haarcascade_frontalface_default.xml")) // Update with
+                                                                 // correct path
   {
     // error handling
     std::cout << "Error loading face cascade\n";
@@ -40,7 +67,7 @@ int main() {
   }
 
   // create a window
-  cv::namedWindow("Webcam", cv::WINDOW_AUTOSIZE);
+  cv::namedWindow("CSI Camera", cv::WINDOW_AUTOSIZE);
   cv::Mat img;                      // create a matrix to hold the image
   std::cout << "Hit ESC to exit\n"; // print to console
   auto start = std::chrono::steady_clock::now(); // start the timer
@@ -56,13 +83,13 @@ int main() {
     }
 
     // fix paths when using jetson
-    std::string prevImPath =
-        "../Images/image" + std::to_string(img_count - 1) + ".jpg";
-    std::string currImPath =
-        "../Images/image" + std::to_string(img_count) + ".jpg";
+    std::string prevImPath = "/home/cds-nano-3/edge-ml/Images/image" +
+                             std::to_string(img_count - 1) + ".jpg";
+    std::string currImPath = "/home/cds-nano-3/edge-ml/Images/image" +
+                             std::to_string(img_count) + ".jpg";
 
     // display realtime webcam feed
-    cv::imshow("Webcam", img);
+    cv::imshow("CSI Camera", img);
 
     auto end = std::chrono::steady_clock::now();
     // calculate the elapsed time
@@ -83,16 +110,19 @@ int main() {
 
         // draw the faces
         for (const auto &face : faces) {
+          std::cout << "drawing faces" << std::endl;
           // draw a rectangle around the face
           cv::rectangle(img, face, cv::Scalar(255, 0, 0), 2);
         }
         // save the image
         for (const auto &face : faces) {
+          std::cout << "saving faces" << std::endl;
           // crop the face
           cv::Mat face_img = img(face);
           // save the image
-          std::string filename = "../Images/bounding_boxes/image" +
-                                 std::to_string(bb_count) + ".jpg";
+          std::string filename =
+              "/home/cds-nano-3/edge-ml/Images/bounding_boxes/image" +
+              std::to_string(bb_count) + ".jpg";
           cv::imwrite(filename, face_img);
           bb_count++;
         }
