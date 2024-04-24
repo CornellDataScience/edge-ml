@@ -689,7 +689,7 @@ input[type=number]::-webkit-outer-spin-button {
      padding-left: 0;
      padding-right: 0;
   }
- 
+
   .tpty-consent .tds-form-input-choice[type=checkbox] {
      margin-right: var(--tds-size-base);
   }
@@ -702,7 +702,7 @@ input[type=number]::-webkit-outer-spin-button {
      width:100%;
   }
 
-  
+
   .tpty-consent .tds-form-input-choice[type=checkbox]+div .tpty-consent-scope-title {
     color: var(--tds-color--grey30);
   }
@@ -718,7 +718,7 @@ input[type=number]::-webkit-outer-spin-button {
      line-height: var(--tds-line-height--20);
      display: inline-block;
  }
- 
+
  .select-all {
      font-weight: var(--tds-font-weight--book);
      font-size: var(--tds-font-size--30);
@@ -772,7 +772,7 @@ input[type=number]::-webkit-outer-spin-button {
  *[dir="rtl"] .consent-icon-container  {
     left: 8px;
   }
- 
+
  .access-confirmation-container {
     padding-top: var(--tds-size--9x);
  }
@@ -844,7 +844,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 /*********************
-* Expired Password Reset Screen 
+* Expired Password Reset Screen
 ********************/
 
 .exp-pw-reset-container{
@@ -903,9 +903,9 @@ input[type=number]::-webkit-outer-spin-button {
 ********************/
 
 .back-btn-grid{
-    display: grid; 
-    grid-template-areas: 'icon heading icon'; 
-    grid-template-columns: var(--tds-size--5x) auto var(--tds-size--5x); 
+    display: grid;
+    grid-template-areas: 'icon heading icon';
+    grid-template-columns: var(--tds-size--5x) auto var(--tds-size--5x);
     text-align: center; align-items: center;
     line-height: var(--tds-line-height--70,36px);
 }
@@ -951,7 +951,7 @@ noscript {
     position: fixed;
     top: var(--tds-size-7x); /* height of the header so it is still visible */
     left: 0px;
-    z-index: 10000; 
+    z-index: 10000;
     height: 100%;
     width: 100%;
     background-color: var(--tds-color--white);
@@ -1017,7 +1017,7 @@ noscript {
         max-width: 432px;
         margin: auto;
     }
-    
+
     .revoke_content-screen .tds-btn--full,
     .security-step-container .tds-btn--full{
         max-width: 204px;
@@ -1049,7 +1049,7 @@ noscript {
 .security-step-component {
     display: flex;
     align-items: flex-start;
-   
+
 }
 
 .security-step-component > span {
@@ -1103,7 +1103,7 @@ noscript {
 .security-step-container h1 {
     padding-bottom: var(--tds-size-2x);
 }
-.no-scopes-container { 
+.no-scopes-container {
     display: flex;
     align-items: flex-start;
     gap: 12px;

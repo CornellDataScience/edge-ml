@@ -162,4 +162,3 @@ CMakeFiles/simple_camera.dir/clean:
 CMakeFiles/simple_camera.dir/depend:
 	cd /Users/ryanho/documents/cornell/edge-ml/src && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/ryanho/Documents/cornell/edge-ml/src /Users/ryanho/documents/cornell/edge-ml/src /Users/ryanho/documents/cornell/edge-ml/src /Users/ryanho/documents/cornell/edge-ml/src /Users/ryanho/documents/cornell/edge-ml/src/CMakeFiles/simple_camera.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/simple_camera.dir/depend
-
