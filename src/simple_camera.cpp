@@ -37,8 +37,8 @@ int main() {
   int capture_height = 720;
   int display_width = 1280;
   int display_height = 720;
-  int default_framerate = 5;
-  int motion_framerate = 5;
+  int default_framerate = 60;
+  int motion_framerate = 60;
   int flip_method = 0;
 
   std::string pipeline =
@@ -82,12 +82,10 @@ int main() {
       break;
     }
 
+    std::string pwd = "/home/james/Documents/edge-ml/src";
     // fix paths when using jetson
-    std::string prevImPath = "/home/cds-nano-3/edge-ml/Images/image" +
-                             std::to_string(img_count - 1) + ".jpg";
-    std::string currImPath = "/home/cds-nano-3/edge-ml/Images/image" +
-                             std::to_string(img_count) + ".jpg";
-
+    std::string prevImPath = pwd + "/../images/" + std::to_string(img_count - 1) + ".jpg";
+    std::string currImPath = pwd + "/../images/" + std::to_string(img_count) + ".jpg";
     // display realtime webcam feed
     cv::imshow("CSI Camera", img);
 
@@ -121,7 +119,7 @@ int main() {
           cv::Mat face_img = img(face);
           // save the image
           std::string filename =
-              "/home/cds-nano-3/edge-ml/Images/bounding_boxes/image" +
+             pwd + "/../images/bounding_boxes/" +
               std::to_string(bb_count) + ".jpg";
           cv::imwrite(filename, face_img);
           bb_count++;
