@@ -35,6 +35,14 @@ client = MongoClient(uri)
 db = client["auth"]
 users = db.users
 
+allUsers = {
+    "Evan": False,
+    "David": False,
+    "Andy": False,
+    "Bryant": False,
+    "James": False,
+}
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -114,6 +122,14 @@ def logout():
 @app.route("/dashboard")
 @login_required
 def dashboard():
+    # make contact with model to get allowed users
+
+    def allowedUsers():
+        # fetch some json from backend model
+        # if the returned user of the model is in the allowed list
+        # return True, else return False
+        pass
+
     # endpoints go here
     # some if check to make sure system is connected to nano (therefore online)
     systemStatus = "Online"
@@ -126,6 +142,30 @@ def dashboard():
         deviceName=deviceName,
         deviceID=deviceID,
         isIndicator=isIndicator,
+    )
+
+
+@app.route("/profile", methods=["POST", "GET"])
+@login_required
+def profile():
+    # users
+    email = current_user.get_id()
+    password = users.find_one({"email": email})["password"][14:]
+    if request.method == "POST":
+        print("POST REQ")
+        form_data = request.form
+        print(form_data)
+        for user, value in form_data.items():
+            if user in allUsers:
+                allUsers[user] = value.lower() == "true"
+        # call allowedUsers() and pass in new updated dict
+        return render_template(
+            "profile.html", email=email, password=password, allUsers=allUsers
+        )
+    print("GET REQ")
+    print(allUsers)
+    return render_template(
+        "profile.html", email=email, password=password, allUsers=allUsers
     )
 
 
