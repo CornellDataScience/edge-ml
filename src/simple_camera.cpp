@@ -8,7 +8,7 @@
 #include <curl/curl.h>
 
 int WAIT_TIME = 5.0; // seconds
-std::string endpoint = "http://10.49.25.69:8000/find/";
+std::string endpoint = "http://10.49.25.69:8001/save";
 
 // function to get the current time formatted
 std::string current_time_formatted() {
@@ -20,32 +20,39 @@ std::string current_time_formatted() {
   return ss.str();
 }
 
-void send_image(std::string img_path, std::string endpoint) {
-  // Initialize cURL
-  curl_global_init(CURL_GLOBAL_ALL);
-  CURL* curl = curl_easy_init();
-  if (!curl) {
-    std::cerr << "Failed to initialize cURL" << std::endl;
-    return;
-  }
+int send_image(std::string img_path, std::string endpoint) {
+    CURL *curl;
+    CURLcode res;
 
-  // Set the URL for the endpoint
-  curl_easy_setopt(curl, CURLOPT_URL, endpoint);
+    // Initialize curl
+    curl = curl_easy_init();
+    if (curl) {
+        // Set the URL for your server endpoint
+        curl_easy_setopt(curl, CURLOPT_URL, endpoint);
 
-  // Set the POST data for the endpoint
-  curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "{\"img_path\": \"" + img_path + "\"}");
+        // Set the POST data (in this case, the image file)
+        curl_mime *form = curl_mime_init(curl);
+        curl_mimepart *part = curl_mime_addpart(form);
+        curl_mime_name(part, "image_file");
+        curl_mime_filedata(part, img_path.c_str());
 
-  // Perform the request
-  CURLcode res = curl_easy_perform(curl);
-  if (res != CURLE_OK) {
-    std::cerr << "Failed to perform request: " << curl_easy_strerror(res) << std::endl;
-  } else {
-    std::cout << "Image successfully sent!" << std::endl;
-  }
+        // Set the form data
+        curl_easy_setopt(curl, CURLOPT_MIMEPOST, form);
 
-  // Cleanup
-  curl_easy_cleanup(curl);
-  curl_global_cleanup();
+        // Perform the request
+        res = curl_easy_perform(curl);
+
+        // Check for errors
+        if (res != CURLE_OK)
+            std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
+
+        // Cleanup
+        curl_easy_cleanup(curl);
+        curl_mime_free(form);
+    } else {
+	std::cerr << "Failed to initialize curl" << std::endl;
+    }
+    return 0;
 }
 
 std::string gstreamer_pipeline(int capture_width, int capture_height,
