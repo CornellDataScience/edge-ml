@@ -152,9 +152,7 @@ def profile():
     email = current_user.get_id()
     password = users.find_one({"email": email})["password"][14:]
     if request.method == "POST":
-        print("POST REQ")
         form_data = request.form
-        print(form_data)
         for user, value in form_data.items():
             if user in allUsers:
                 allUsers[user] = value.lower() == "true"
@@ -162,12 +160,10 @@ def profile():
         return render_template(
             "profile.html", email=email, password=password, allUsers=allUsers
         )
-    print("GET REQ")
-    print(allUsers)
     return render_template(
         "profile.html", email=email, password=password, allUsers=allUsers
     )
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=8000)
