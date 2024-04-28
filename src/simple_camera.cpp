@@ -4,8 +4,11 @@
 #include <iomanip>
 #include <opencv2/opencv.hpp>
 #include <sstream>
+#include <iostream>
+#include <curl/curl.h>
 
 int WAIT_TIME = 5.0; // seconds
+std::string endpoint = "http://10.49.25.69:8000/find/";
 
 // function to get the current time formatted
 std::string current_time_formatted() {
@@ -15,6 +18,34 @@ std::string current_time_formatted() {
   std::stringstream ss;
   ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d_%H-%M-%S");
   return ss.str();
+}
+
+void send_image(std::string img_path, std::string endpoint) {
+  // Initialize cURL
+  curl_global_init(CURL_GLOBAL_ALL);
+  CURL* curl = curl_easy_init();
+  if (!curl) {
+    std::cerr << "Failed to initialize cURL" << std::endl;
+    return;
+  }
+
+  // Set the URL for the endpoint
+  curl_easy_setopt(curl, CURLOPT_URL, endpoint);
+
+  // Set the POST data for the endpoint
+  curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "{\"img_path\": \"" + img_path + "\"}");
+
+  // Perform the request
+  CURLcode res = curl_easy_perform(curl);
+  if (res != CURLE_OK) {
+    std::cerr << "Failed to perform request: " << curl_easy_strerror(res) << std::endl;
+  } else {
+    std::cout << "Image successfully sent!" << std::endl;
+  }
+
+  // Cleanup
+  curl_easy_cleanup(curl);
+  curl_global_cleanup();
 }
 
 std::string gstreamer_pipeline(int capture_width, int capture_height,
@@ -57,9 +88,8 @@ int main() {
 
   // load the face cascade
   cv::CascadeClassifier face_cascade;
-  if (!face_cascade.load("/home/cds-nano-3/edge-ml/utils/"
-                         "haarcascade_frontalface_default.xml")) // Update with
-                                                                 // correct path
+  if (!face_cascade.load("/home/james/edge-ml/src/haarcascade_frontalface_default.xml")) // Update with
+                                                          
   {
     // error handling
     std::cout << "Error loading face cascade\n";
@@ -82,7 +112,7 @@ int main() {
       break;
     }
 
-    std::string pwd = "/home/james/Documents/edge-ml/src";
+    std::string pwd = "/home/james/edge-ml/src";
     // fix paths when using jetson
     std::string prevImPath = pwd + "/../images/" + std::to_string(img_count - 1) + ".jpg";
     std::string currImPath = pwd + "/../images/" + std::to_string(img_count) + ".jpg";
@@ -105,7 +135,12 @@ int main() {
         cv::Mat gray; // create a matrix to hold the gray image
         cvtColor(img, gray, cv::COLOR_BGR2GRAY);    // convert to gray
         face_cascade.detectMultiScale(gray, faces); // detect faces
-
+	
+	if (faces.size() > 0) {
+	  std::cout << "Faces detected, sending image " + currImPath + " to endpoint " + endpoint << std::endl;
+	  send_image(currImPath, endpoint);
+	}
+/*
         // draw the faces
         for (const auto &face : faces) {
           std::cout << "drawing faces" << std::endl;
@@ -124,6 +159,7 @@ int main() {
           cv::imwrite(filename, face_img);
           bb_count++;
         }
+*/
       }
       img_count++;
       start = std::chrono::steady_clock::now(); // reset the timer
