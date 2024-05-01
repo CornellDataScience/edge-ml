@@ -102,19 +102,18 @@
 
                 <!-- frame1 -->
                 <div class="styles_Tile__W4LCr {{ 'flashing-border' if isIndicator else 'green-border' }}"
-                  style="width: 130%; height: 700px;">
+                  style="width: 100%; height: 100%;">
                   <div style="padding: 10px;"></div> <!-- spacing for div-->
-                  <img src="{{ url_for('static', filename='img/grey.jpeg') }}" alt="EDGE_DEVICE_2"
-                    style="width: 100%; height: 87%; padding-bottom: 10px;">
+                  <img src="{{ imagePath }}" alt="Image Path" style="width: 100%; height: 100%; padding-bottom: 10px;">
                   <div class="styles_TextWithButton__vsWFV">
                     <div class="">
-                      <p class="tds-text--500">{{ deviceName }}</p>
-                      <p class="tds-text_color--30">{{ deviceID }}</p>
+                      <p class="tds-text--500">Edge Device #1</p>
+                      <p class="tds-text_color--30">DEFAULT_EDGE_DEVICE_ID_1</p>
                     </div>
                     <!-- class = "" must stay -->
                     <div class="">
                       <p>Alert Status: {{ isIndicator }} </p>
-                      <p>System Status: {{ systemStatus }} </p>
+                      <p>System Status: Online </p>
                     </div>
                   </div>
                 </div>

@@ -8,7 +8,7 @@ from flask_login import (
 )
 from pymongo.mongo_client import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
-import os
+import os, threading, time, requests, shutil
 from dotenv import load_dotenv
 from models import User
 
@@ -36,11 +36,10 @@ db = client["auth"]
 users = db.users
 
 allUsers = {
-    "Evan": False,
-    "David": False,
-    "Andy": False,
-    "Bryant": False,
-    "James": False,
+    "evan": False,
+    "david": False,
+    "bryant": False,
+    "james": False,
 }
 
 
@@ -118,33 +117,22 @@ def logout():
     return redirect(url_for("login"))
 
 
-# protected pages
+# dashboard, load image + detection
 @app.route("/dashboard")
 @login_required
-def dashboard():
-    # make contact with model to get allowed users
-
-    def allowedUsers():
-        # fetch some json from backend model
-        # if the returned user of the model is in the allowed list
-        # return True, else return False
-        pass
-
-    # endpoints go here
-    # some if check to make sure system is connected to nano (therefore online)
-    systemStatus = "Online"
-    isIndicator = False
-    deviceName = "Edge Device #1"
-    deviceID = "DEFAULT_EDGE_DEVICE_ID_1"
+async def dashboard():
+    # fetch file from api call
+    meta = await check_directory()
+    isIndicator = not bool(allUsers[meta[0][0]])
+    imagePath = meta[1]
     return render_template(
         "dashboard.html",
-        systemStatus=systemStatus,
-        deviceName=deviceName,
-        deviceID=deviceID,
+        imagePath=imagePath,
         isIndicator=isIndicator,
     )
 
 
+# user settings and selection
 @app.route("/profile", methods=["POST", "GET"])
 @login_required
 def profile():
@@ -156,7 +144,6 @@ def profile():
         for user, value in form_data.items():
             if user in allUsers:
                 allUsers[user] = value.lower() == "true"
-        # call allowedUsers() and pass in new updated dict
         return render_template(
             "profile.html", email=email, password=password, allUsers=allUsers
         )
@@ -165,5 +152,27 @@ def profile():
     )
 
 
+# thread check directory for image
+response_data = None
+response_lock = threading.Lock()
+
+
+async def check_directory():
+    global response_data
+    og_path = "../src/model/face.jpeg"
+    directory_path = "static/img/"
+    if os.path.exists(og_path):
+        # file exists
+        response = requests.get("http://10.49.25.69:8001/find")
+        with response_lock:
+            shutil.copy(og_path, directory_path)
+            moved_file_name = os.path.basename(og_path)
+            moved_file_path = os.path.join(directory_path, moved_file_name)
+            response_data = response.json() if response.ok else None
+            return [response_data, moved_file_path]
+
+
+# flask network config
 if __name__ == "__main__":
+    threading.Thread(target=check_directory).start()  # thread
     app.run(debug=True, host="0.0.0.0", port=8000)

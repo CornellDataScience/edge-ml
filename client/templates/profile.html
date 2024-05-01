@@ -123,7 +123,7 @@
             </div>
           </div>
           <div data-test="account-settings-login-info">
-            <h3 class="">Security & Personel</h3>
+            <h3 class="">Security & Personnel</h3>
           </div>
 
           <!-- color code for select person and grid -->
@@ -180,7 +180,7 @@
             <div class="grid">
               {% for user, is_allowed in allUsers.items() %}
               <input type="text" class="person {{ 'allowed' if is_allowed else 'not-allowed' }}" id="{{ user }}"
-                value="{{ user }}" readonly>
+                value="{{ user }}" style="text-transform: capitalize;" readonly>
               <input type="hidden" name="{{ user }}">
               {% endfor %}
             </div>
