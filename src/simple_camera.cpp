@@ -8,7 +8,8 @@
 #include <curl/curl.h>
 
 int WAIT_TIME = 5.0; // seconds
-std::string endpoint = "http://10.49.25.69:8001/save";
+// std::string endpoint = "http://10.49.25.69:8001/save/";
+// std::string endpoint = "http://10.49.25.69:5000/find/";
 
 // function to get the current time formatted
 std::string current_time_formatted() {
@@ -21,19 +22,22 @@ std::string current_time_formatted() {
 }
 
 int send_image(std::string img_path, std::string endpoint) {
+    std::cout << "In send_image" << std::endl;
     CURL *curl;
     CURLcode res;
 
     // Initialize curl
     curl = curl_easy_init();
     if (curl) {
+        std::cout << "curl successfully initialized" << std::endl;
         // Set the URL for your server endpoint
-        curl_easy_setopt(curl, CURLOPT_URL, endpoint);
+        curl_easy_setopt(curl, CURLOPT_URL, "http://10.49.25.69:5000/find/");
 
         // Set the POST data (in this case, the image file)
-        curl_mime *form = curl_mime_init(curl);
+	curl_mime *form = curl_mime_init(curl);
         curl_mimepart *part = curl_mime_addpart(form);
         curl_mime_name(part, "image_file");
+	std::cout << img_path.c_str() << std::endl;
         curl_mime_filedata(part, img_path.c_str());
 
         // Set the form data
@@ -43,8 +47,9 @@ int send_image(std::string img_path, std::string endpoint) {
         res = curl_easy_perform(curl);
 
         // Check for errors
-        if (res != CURLE_OK)
+        if (res != CURLE_OK) {
             std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
+	}
 
         // Cleanup
         curl_easy_cleanup(curl);
@@ -132,6 +137,7 @@ int main() {
 
     if (elapsed.count() >= WAIT_TIME) {
       // save the image
+      std::cout << "saving image" << std::endl;
       cv::imwrite(currImPath, img);
 
       if (img_count > 0 && detect_motion(prevImPath, currImPath)) {
@@ -144,8 +150,9 @@ int main() {
         face_cascade.detectMultiScale(gray, faces); // detect faces
 	
 	if (faces.size() > 0) {
-	  std::cout << "Faces detected, sending image " + currImPath + " to endpoint " + endpoint << std::endl;
-	  send_image(currImPath, endpoint);
+	  // std::cout << "Faces detected, sending image " + currImPath + " to endpoint " + endpoint << std::endl;
+	  // send_image(currImPath, endpoint);
+	  send_image(currImPath, "");
 	}
 /*
         // draw the faces
