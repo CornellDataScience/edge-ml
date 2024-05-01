@@ -31,7 +31,7 @@ int send_image(std::string img_path, std::string endpoint) {
     if (curl) {
         std::cout << "curl successfully initialized" << std::endl;
         // Set the URL for your server endpoint
-        curl_easy_setopt(curl, CURLOPT_URL, "http://10.49.25.69:5000/find/");
+        curl_easy_setopt(curl, CURLOPT_URL, "http://10.49.25.69:8001/save2/");
 
         // Set the POST data (in this case, the image file)
 	curl_mime *form = curl_mime_init(curl);
