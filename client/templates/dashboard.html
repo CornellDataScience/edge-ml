@@ -34,7 +34,7 @@
         <aside class="styles-module_Navigation__Jn9Z2">
           <ul class="tds-list styles-module_Navigation__z1jpg ">
             <li class="styles-module_NavigationLink__KnbW0 styles-module_Selected__0Ti4Y">
-              <a href="">
+              <a href="{{ url_for('dashboard') }}">
                 <div class="styles-module_Scrim__O5pVx">
                   <svg width="17" height="18" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -45,7 +45,7 @@
               </a>
             </li>
             <li class="styles-module_NavigationLink__KnbW0 ">
-              <a href="">
+              <a href="{{ url_for('profile') }}">
                 <div class="styles-module_Scrim__O5pVx">
                   <svg width="16" height="17" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -121,14 +121,11 @@
               </div>
               <div class="styles_Row__C2aOM">
                 <div class="styles_Tile__W4LCr" style="width: 1250px;">
-                  <div class="styles_ImageBox__vHuKP">
-                    <img src="./dashboard_files/third-party-car_636x300_ed18888cb5f98.jpg" alt="">
-                  </div>
                   <div class="styles_TextWithButton__vsWFV">
                     <div class="styles_ThirdPartyText__OWIxG styles_TileText__IUWhj">
-                      <div class="tds-text--500">Add a new device
-                      </div>
+                      <div class="tds-text--500">Add a new device</div>
                     </div>
+                    <!-- add new -->
                     <div class="">
                       <button class="tds-btn tds-link styles_Link__QtsAa "
                         data-test="teslaaccount-third-party-add">Add</button>

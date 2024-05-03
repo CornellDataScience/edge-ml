@@ -12,7 +12,6 @@ Images/**
 client/.env
 **/.DS_Store
 .vscode/
-<<<<<<< Updated upstream
 **/CMakeFiles/**
 **/cmake_install.cmake
 **/CMakeCache.txt
@@ -30,3 +29,10 @@ src/lfwa/**
 src/calib/calib_images/**
 src/model/env/
 client/client/
+client/client/**
+client/client
+client/__pycache__
+
+*.DS_Store
+.vscode/
+.env

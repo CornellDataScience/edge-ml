@@ -182,7 +182,9 @@ async def check_directory():
             return [response_data, moved_file_path]
 
 
-# flask network config 
+
+
+# flask network config
 if __name__ == "__main__":
-    threading.Thread(target=check_directory).start() # thread
+    # threading.Thread(target=check_directory).start()  # thread
     app.run(debug=True, host="0.0.0.0", port=8000)
