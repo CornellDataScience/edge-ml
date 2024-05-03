@@ -120,18 +120,28 @@ def logout():
 # dashboard, load image + detection
 @app.route("/dashboard")
 @login_required
-async def dashboard():
+# TODO: figure out which dashboard
+def dashboard():
+    # endpoints go here
+    # some if check to make sure system is connected to nano (therefore online)
+    systemStatus = "Online"
+    isIndicator = False
+    deviceName = "Edge Device #1"
+    deviceID = "DEFAULT_EDGE_DEVICE_ID_1"
+#async def dashboard():
     # fetch file from api call
-    meta = await check_directory()
-    isIndicator = not bool(allUsers[meta[0][0]])
-    imagePath = meta[1]
+#    meta = await check_directory()
+ #   isIndicator = not bool(allUsers[meta[0][0]])
+  #  imagePath = meta[1]
     return render_template(
         "dashboard.html",
-        imagePath=imagePath,
+        imagePath = imagePath,
         isIndicator=isIndicator,
     )
 
-
+    # TODO: needed?
+# if __name__ == "__main__":
+#    app.run(debug=True)
 # user settings and selection
 @app.route("/profile", methods=["POST", "GET"])
 @login_required
@@ -152,10 +162,10 @@ def profile():
     )
 
 
+
 # thread check directory for image
 response_data = None
 response_lock = threading.Lock()
-
 
 async def check_directory():
     global response_data
@@ -163,16 +173,18 @@ async def check_directory():
     directory_path = "static/img/"
     if os.path.exists(og_path):
         # file exists
-        response = requests.get("http://10.49.25.69:8001/find")
+        response = requests.get('http://10.49.25.69:8001/find')
         with response_lock:
             shutil.copy(og_path, directory_path)
             moved_file_name = os.path.basename(og_path)
             moved_file_path = os.path.join(directory_path, moved_file_name)
-            response_data = response.json() if response.ok else None
+            response_data = response.json() if response.ok else None    
             return [response_data, moved_file_path]
+
+
 
 
 # flask network config
 if __name__ == "__main__":
-    threading.Thread(target=check_directory).start()  # thread
+    # threading.Thread(target=check_directory).start()  # thread
     app.run(debug=True, host="0.0.0.0", port=8000)

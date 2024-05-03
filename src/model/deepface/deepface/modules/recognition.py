@@ -211,7 +211,7 @@ def find(
     # ----------------------------
     # now, we got representations for facial database
     df = pd.DataFrame(representations)
-
+    start = time.time()
     if silent is False:
         logger.info(f"Searching {img_path} in {df.shape[0]} length datastore")
 
@@ -224,12 +224,15 @@ def find(
         align=align,
         expand_percentage=expand_percentage,
     )
-
+    logger.info(f'detector {time.time() - start}')
     resp_obj = []
+
 
     for source_obj in source_objs:
         source_img = source_obj["face"]
         source_region = source_obj["facial_area"]
+        start = time.time()
+
         target_embedding_obj = representation.represent(
             img_path=source_img,
             model_name=model_name,
@@ -238,6 +241,8 @@ def find(
             align=align,
             normalization=normalization,
         )
+        logger.info(f'embed {time.time() - start}')
+
 
         target_representation = target_embedding_obj[0]["embedding"]
 

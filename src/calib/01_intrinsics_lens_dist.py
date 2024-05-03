@@ -7,7 +7,7 @@ from PIL import Image
 np.set_printoptions(suppress=True)
 
 # Object points in 3D
-GRID_SHAPE = (9,6)
+GRID_SHAPE = (7,7)
 objp = np.zeros((GRID_SHAPE[0]*GRID_SHAPE[1],3), np.float32)
 objp[:,:2] = np.mgrid[0:GRID_SHAPE[0], 0:GRID_SHAPE[1]].T.reshape(-1,2)
 objp *= 20 # One square on my grid has 20mm
@@ -27,8 +27,11 @@ for fname in fnames:
     ret, corners = cv2.findChessboardCorners(arr, GRID_SHAPE, flags)
     
     arr_vis = cv2.drawChessboardCorners(arr, GRID_SHAPE, corners, ret)
-    plt.imshow(arr_vis, cmap='gray')
-    plt.show()
+    #plt.imshow(arr_vis, cmap='gray')
+    #plt.show()
+    print("RET", ret)
+    print("CORNERS", corners)
+
 
     if ret:
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
@@ -63,11 +66,11 @@ for fname in fnames:
     arr = np.array(img)
     
     flags = cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_NORMALIZE_IMAGE + cv2.CALIB_CB_FAST_CHECK
-    ret, corners = cv2.findChessboardCorners(arr, (9,6), flags)
+    ret, corners = cv2.findChessboardCorners(arr, GRID_SHAPE, flags)
     
     arr_vis = cv2.drawChessboardCorners(arr, GRID_SHAPE, corners, ret)
-    plt.imshow(arr_vis, cmap='gray')
-    plt.show()
+    #plt.imshow(arr_vis, cmap='gray')
+    #plt.show()
 
     if ret:
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)

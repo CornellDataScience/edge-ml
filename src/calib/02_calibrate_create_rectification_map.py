@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from PIL import Image 
 
 # Object points in 3D
-GRID_SHAPE = (9,6)
+GRID_SHAPE = (7,7)
 objp = np.zeros((GRID_SHAPE[0]*GRID_SHAPE[1],3), np.float32)
 objp[:,:2] = np.mgrid[0:GRID_SHAPE[0], 0:GRID_SHAPE[1]].T.reshape(-1,2)
 objp *= 20 # One square on my grid has 20mm
@@ -70,4 +70,4 @@ cv_file.write("map_l_1", left_stereo_maps[0])
 cv_file.write("map_l_2", left_stereo_maps[1])
 cv_file.write("map_r_1", right_stereo_maps[0])
 cv_file.write("map_r_2", right_stereo_maps[1])
-cv_file.release() 
+cv_file.release()
