@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/profile/profilesetting.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/profile/main.css') }}">
+  <title>Profile | EdgeML</title>
+</head>
+
+<body class="tds-scrim--white">
+  <div id="tds-site-header-wrapper">
+    <div id="mega-menu">
+      <div class="dx-mega-menu">
+        <header class="tds-site-header tds--fade-in" id="tds-site-header">
+          <!-- logo -->
+          <h1>
+            <a href="/">
+              <img src="{{ url_for('static', filename='img/logo.png') }}" alt="EdgeML Logo"
+                style="height: 70%; width: 70%; padding-left: 30px;">
+            </a>
+          </h1>
+        </header>
+      </div>
+    </div>
+  </div>
+
+  <div id="tesla-profile-settings" class="container">
+    <div class="App_AppWrapper__cbyq5 ">
+      <div class="styles-module_PageWrapper__wkRd7" style="">
+        <aside class="styles-module_Navigation__Jn9Z2">
+          <button type="button" class="styles-module_NavigationDropdown__ERDfE ">
+            <h1 class="tds-text--h3 styles-module_NavigationTitle__2hTUo">
+              <div class="styles-module_Scrim__O5pVx">
+                <svg width="16" height="17" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M7.527 8.468a4.234 4.234 0 1 0 0-8.468 4.234 4.234 0 0 0 0 8.468Zm0-7.057a2.826 2.826 0 0 1 2.823 2.823 2.826 2.826 0 0 1-2.823 2.823 2.826 2.826 0 0 1-2.823-2.823 2.826 2.826 0 0 1 2.823-2.823Zm7.5 13.754c-.619-3.112-3.702-5.286-7.5-5.286-3.797 0-6.881 2.174-7.5 5.286-.084.423.028.86.307 1.2.298.364.74.571 1.214.571h11.958c.474 0 .916-.207 1.214-.57.28-.34.391-.778.307-1.201Zm-1.52.36H1.547c-.058 0-.1-.029-.137-.085.397-1.998 2.481-4.15 6.116-4.15s5.72 2.152 6.102 4.18a.16.16 0 0 1-.123.055Z"
+                    fill="#171A20" fill-rule="nonzero"></path>
+                </svg>
+              </div>Profile Settings <div class="styles-module_Chevron__cnUbm">
+                <svg width="9" height="5" xmlns="http://www.w3.org/2000/svg">
+                  <g transform="matrix(1 0 0 -1 .271 5.59)" fill="#393C41" fill-rule="evenodd">
+                    <rect transform="scale(1 -1) rotate(-45 -1.307 0)" x="5.186" width="1.5" height="6" rx=".75"></rect>
+                    <rect transform="rotate(-45 2.75 3)" x="2" width="1.5" height="6" rx=".75"></rect>
+                  </g>
+                </svg>
+              </div>
+            </h1>
+          </button>
+          <ul class="tds-list styles-module_Navigation__z1jpg ">
+            <li class="styles-module_NavigationLink__KnbW0 ">
+              <a href="{{ url_for('dashboard') }}">
+                <div class="styles-module_Scrim__O5pVx">
+                  <svg width="17" height="18" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M16.89 8.576 9.004.692a.657.657 0 0 0-.929 0L1.544 7.225h-.011v.01L.193 8.577a.657.657 0 1 0 .928.93l.412-.412v7.393c0 .362.294.657.657.657h4.38a.657.657 0 0 0 .657-.657V11.45h2.628v5.037c0 .362.294.657.657.657h4.38a.657.657 0 0 0 .657-.657V9.094l.411.411a.654.654 0 0 0 .93 0 .657.657 0 0 0 0-.929Zm-2.655 7.254h-3.066v-5.037a.657.657 0 0 0-.657-.657H6.57a.657.657 0 0 0-.657.657v5.037H2.847V7.78L8.54 2.086l5.694 5.694v8.05Z"
+                      fill="#171A20" fill-rule="nonzero"></path>
+                  </svg>
+                </div>My Home
+              </a>
+            </li>
+            <li class="styles-module_NavigationLink__KnbW0 styles-module_Selected__0Ti4Y">
+              <a href="{{ url_for('profile') }}">
+                <div class="styles-module_Scrim__O5pVx">
+                  <svg width="16" height="17" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M7.527 8.468a4.234 4.234 0 1 0 0-8.468 4.234 4.234 0 0 0 0 8.468Zm0-7.057a2.826 2.826 0 0 1 2.823 2.823 2.826 2.826 0 0 1-2.823 2.823 2.826 2.826 0 0 1-2.823-2.823 2.826 2.826 0 0 1 2.823-2.823Zm7.5 13.754c-.619-3.112-3.702-5.286-7.5-5.286-3.797 0-6.881 2.174-7.5 5.286-.084.423.028.86.307 1.2.298.364.74.571 1.214.571h11.958c.474 0 .916-.207 1.214-.57.28-.34.391-.778.307-1.201Zm-1.52.36H1.547c-.058 0-.1-.029-.137-.085.397-1.998 2.481-4.15 6.116-4.15s5.72 2.152 6.102 4.18a.16.16 0 0 1-.123.055Z"
+                      fill="#171A20" fill-rule="nonzero"></path>
+                  </svg>
+                </div>Profile Settings
+              </a>
+            </li>
+            <li class="styles-module_NavigationLink__KnbW0 ">
+              <a href="{{ url_for('logout') }}">
+                <div class="styles-module_Scrim__O5pVx">
+                  <svg width="16" height="18" xmlns="http://www.w3.org/2000/svg">
+                    <g stroke="#171A20" stroke-width="1.613" fill="none" fill-rule="evenodd" stroke-linecap="round"
+                      stroke-linejoin="round">
+                      <path
+                        d="M6.7 8.5h8M11.294 5.106 14.688 8.5l-3.394 3.394M9.5 15.7H2.643c-.631 0-1.143-.645-1.143-1.44V2.74c0-.795.512-1.44 1.143-1.44H9.5">
+                      </path>
+                    </g>
+                  </svg>
+                </div>Sign Out
+              </a>
+            </li>
+          </ul>
+        </aside>
+        <main class="styles-module_Main__GkQU0 " id="main-content">
+          <h1 class="">Profile Settings</h1>
+          <div class="styles_Container__r3p4g" data-test="profile-settings-account-settings">
+            <div data-test="account-settings-contact-info">
+              <div class="tds-flex tds-flex-gutters styles_ContentSection__qhaqI">
+                <div class="tds-flex-item styles_ContentBlock__qslfA">
+                  <div class="styles_Container__ELOkw">
+                    <div class="styles_TextContainer__rlQ5q">
+                      <span class="tds-text--contrast-low tds-text--500"
+                        data-test="profile-settings-account-settings-email-title">Email</span>
+                      <div class="styles_BodyContainer__PpjWu styles_MaxWidth__wfjZV"
+                        data-test="profile-settings-account-settings-email-body">
+                        <span class="tds-text--contrast-high tds-text--500">{{ email }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tds-flex-item styles_ContentBlock__qslfA">
+                  <div class="styles_Container__ELOkw">
+                    <div class="styles_TextContainer__rlQ5q">
+                      <span class="tds-text--contrast-low tds-text--500"
+                        data-test="profile-settings-account-settings-password-title">Password</span>
+                      <div class="styles_BodyContainer__PpjWu"
+                        data-test="profile-settings-account-settings-password-body" style="width: 110%;">
+                        <span class="tds-text--contrast-high tds-text--500">{{ password }}</span>
+                      </div>
+                    </div>
+                    <div class="styles_CtaContainer__y8PAe" data-test="profile-settings-account-settings-password-cta">
+                      <p>Hash Method: pbkdf2:sha256</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div data-test="account-settings-login-info">
+            <h3 class="">Security & Personnel</h3>
+          </div>
+
+          <!-- color code for select person and grid -->
+          <style>
+            .grid {
+              display: grid;
+              grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+              gap: 10px;
+            }
+
+            .person {
+              padding: 10px;
+              /* adjust as needed */
+              cursor: pointer;
+            }
+
+            .person.allowed {
+              border: 2px solid limegreen;
+            }
+
+            .person.not-allowed {
+              border: 2px solid red;
+            }
+
+            button[type="submit"] {
+              background-color: black;
+              /* hot pink */
+              color: white;
+              /* white text */
+              border: none;
+              /* remove default border */
+              padding: 10px 20px;
+              /* add some padding */
+              text-align: center;
+              /* center the text */
+              text-decoration: none;
+              /* remove default text decoration */
+              display: inline-block;
+              font-size: 16px;
+              margin: 4px 2px;
+              cursor: pointer;
+              /* change cursor on hover */
+              border-radius: 2px;
+              /* rounded corners */
+            }
+
+            button[type="submit"]:hover {
+              background-color: #ff1493;
+            }
+          </style>
+
+          <!-- users -->
+          <form id="userForm" method="post">
+            <div class="grid">
+              {% for user, is_allowed in allUsers.items() %}
+              <input type="text" class="person {{ 'allowed' if is_allowed else 'not-allowed' }}" id="{{ user }}"
+                value="{{ user }}" style="text-transform: capitalize;" readonly>
+              <input type="hidden" name="{{ user }}">
+              {% endfor %}
+            </div>
+            <br>
+            <button type="submit">Save</button>
+          </form>
+
+          <!-- color selector indicator js -->
+          <script>
+            document.querySelectorAll('.person').forEach(function (person) {
+              // Load the saved state from localStorage
+              var savedState = localStorage.getItem(person.id);
+              if (savedState !== null) {
+                person.style.borderColor = savedState === 'true' ? 'limegreen' : 'red';
+                document.querySelector('input[name="' + person.id + '"]').value = savedState;
+              }
+
+              person.addEventListener('click', function () {
+                var style = window.getComputedStyle(this);
+                var borderColor = style.getPropertyValue('border-color');
+                var hiddenInput = document.querySelector('input[name="' + this.id + '"]');
+                if (borderColor === 'rgb(255, 0, 0)') { // rgb equivalent of 'red'
+                  this.style.borderColor = 'limegreen';
+                  hiddenInput.value = 'true';
+                  localStorage.setItem(this.id, 'true'); // Save the state to localStorage
+                } else {
+                  this.style.borderColor = 'red';
+                  hiddenInput.value = 'false';
+                  localStorage.setItem(this.id, 'false'); // Save the state to localStorage
+                }
+              });
+            });
+          </script>
+      </div>
+      </main>
+    </div>
+  </div>
+  <footer class="tds-site-footer">
+    <nav class="tds-footer-nav">
+      <ul class="tds-list tds-list--horizontal">
+        <li class="tds-footer-item">
+          <a href="/" title="EdgeML © 2024" aria-label="EdgeML © 2024" class="tds-link tds-link--secondary">EdgeML ©
+            2024</a>
+        </li>
+      </ul>
+    </nav>
+  </footer>
+  </div>
+</body>
+
+</html>

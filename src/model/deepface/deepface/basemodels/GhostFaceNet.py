@@ -83,7 +83,7 @@ def load_model():
         logger.info(f"Pre-trained weights is just downloaded to {output}")
 
     model.load_weights(output)
-
+    #xla_fn = tf.function(model, jit_compile=True)
     return model
 
 
@@ -157,6 +157,7 @@ def GhostFaceNetV1() -> Model:
 
     model = keras.models.Model(inputs, embedding_fp32, name=xx.name)
     model = replace_relu_with_prelu(model=model)
+    #xla_fn = tf.function(model, jit_compile=True)
     return model
 
 
