@@ -28,3 +28,9 @@ src/model/message/__pycache__/sms_message.cpython-38.pyc
 src/lfwa/**
 src/calib/calib_images/**
 client/client/**
+client/client
+client/__pycache__
+
+*.DS_Store
+.vscode/
+.env

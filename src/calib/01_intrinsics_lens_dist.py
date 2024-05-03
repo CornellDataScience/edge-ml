@@ -32,6 +32,7 @@ for fname in fnames:
     print("RET", ret)
     print("CORNERS", corners)
 
+
     if ret:
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
         corners_subpix = cv2.cornerSubPix(arr,corners,(11,11),(-1,-1),criteria)
